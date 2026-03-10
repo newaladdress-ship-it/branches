@@ -56,22 +56,36 @@ export default function AddBusinessPage() {
 
     try {
       let logoUrl = ''
+      
+      // Try to upload logo if provided
       if (logoFile) {
-        const storageRef = ref(storage, `logos/${Date.now()}_${logoFile.name}`)
-        await uploadBytes(storageRef, logoFile)
-        logoUrl = await getDownloadURL(storageRef)
+        try {
+          const timestamp = Date.now()
+          const fileExtension = logoFile.name.split('.').pop()?.toLowerCase() || 'jpg'
+          const fileName = `${timestamp}.${fileExtension}`
+          
+          const storageRef = ref(storage, `logos/${fileName}`)
+          const metadata = { contentType: logoFile.type || 'image/jpeg' }
+          
+          const snapshot = await uploadBytes(storageRef, logoFile, metadata)
+          logoUrl = await getDownloadURL(snapshot.ref)
+        } catch (uploadError) {
+          console.warn('Logo upload failed, continuing without logo:', uploadError)
+          // Continue without logo instead of failing completely
+        }
       }
 
+      // Save business data
       await addDoc(collection(db, 'businesses'), {
         ...form,
         logoUrl,
         createdAt: serverTimestamp(),
-        status: 'approved', // Auto-approve for demo
+        status: 'approved',
       })
 
       setStatus('success')
     } catch (err) {
-      console.error('[v0] Firebase submission error:', err)
+      console.error('Firebase error:', err)
       setStatus('error')
     }
   }
