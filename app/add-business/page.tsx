@@ -55,46 +55,25 @@ export default function AddBusinessPage() {
     setStatus('loading')
 
     try {
-      let logoUrl = ''
-      
-      // Upload logo if provided
-      if (logoFile) {
-        try {
-          const timestamp = Date.now()
-          const fileExtension = logoFile.name.split('.').pop()?.toLowerCase() || 'jpg'
-          const fileName = `${timestamp}.${fileExtension}`
-          
-          const storageRef = ref(storage, `logos/${fileName}`)
-          
-          // Upload with proper metadata
-          const metadata = {
-            contentType: logoFile.type || 'image/jpeg',
-            cacheControl: 'public,max-age=3600',
-            customMetadata: {
-              uploadedBy: 'web-app',
-              originalName: logoFile.name
-            }
-          }
-          
-          // Upload file
-          const snapshot = await uploadBytes(storageRef, logoFile, metadata)
-          logoUrl = await getDownloadURL(snapshot.ref)
-          
-          console.log('Logo uploaded successfully:', logoUrl)
-        } catch (uploadError) {
-          console.error('Logo upload failed:', uploadError)
-          // Continue without logo - don't fail the entire submission
-        }
-      }
-
-      // Save business data
-      await addDoc(collection(db, 'businesses'), {
-        ...form,
-        logoUrl,
+      // For now, skip logo upload to avoid CORS/permissions issues
+      // Save business data to Firestore
+      const businessData = {
+        businessName: form.businessName,
+        contactPerson: form.contactPerson,
+        email: form.email,
+        phone: form.phone,
+        whatsapp: form.whatsapp || '',
+        city: form.city,
+        address: form.address,
+        category: form.category,
+        description: form.description,
+        logoUrl: '', // Skip logo for now
         createdAt: serverTimestamp(),
         status: 'approved',
-      })
+      }
 
+      await addDoc(collection(db, 'businesses'), businessData)
+      console.log('Business data saved successfully')
       setStatus('success')
     } catch (err) {
       console.error('Firebase error:', err)
