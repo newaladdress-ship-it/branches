@@ -19,6 +19,7 @@ interface Business {
   description: string
   phone: string
   address: string
+  slug?: string
 }
 
 function CategoriesContent() {
@@ -182,7 +183,7 @@ function CategoriesContent() {
                   {businesses.map((business) => (
                     <Link
                       key={business.id}
-                      href={`/business/${business.id}`}
+                      href={business.slug ? `/${business.slug}` : `/business/${business.id}`}
                       className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200"
                     >
                       <div className="flex items-start gap-4">

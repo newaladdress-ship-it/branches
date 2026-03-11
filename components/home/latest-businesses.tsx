@@ -20,6 +20,7 @@ interface Business {
   category: string
   description: string
   logoUrl?: string
+  slug?: string
   createdAt: any
   status: string
 }
@@ -188,7 +189,7 @@ export default function LatestBusinesses() {
 
                 {/* View Details Link */}
                 <Link
-                  href={`/business/${business.id}`}
+                  href={business.slug ? `/${business.slug}` : `/business/${business.id}`}
                   className="block w-full text-center px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
                 >
                   View Details
