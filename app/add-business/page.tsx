@@ -132,7 +132,7 @@ export default function AddBusinessPage() {
     if (!form.category) newErrors.category = 'Category is required'
     if (!form.address.trim()) newErrors.address = 'Complete address is required'
     if (!form.description.trim()) newErrors.description = 'Business description is required'
-    if (!logoFile) newErrors.logo = 'Business logo is required'
+    // Logo is optional for now
     
     // Phone number validation (Pakistan format - exactly 10 digits)
     const phoneRegex = /^[0-9]{10}$/
@@ -518,7 +518,7 @@ export default function AddBusinessPage() {
                 {/* Logo Upload */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Business Logo <span className="text-red-500">*</span> <span className="text-gray-400">(max {MAX_LOGO_MB}MB)</span>
+                    Business Logo <span className="text-gray-400">(max {MAX_LOGO_MB}MB)</span>
                   </label>
                   <div
                     className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-[#60a5fa] transition-colors cursor-pointer"

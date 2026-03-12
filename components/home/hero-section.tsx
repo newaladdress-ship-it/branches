@@ -20,7 +20,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative bg-[#0f2b3d] overflow-hidden py-20 md:py-32"
+      className="relative bg-[#0f2b3d] overflow-hidden py-16 md:py-28"
       aria-labelledby="hero-heading"
     >
       {/* Decorative circles */}

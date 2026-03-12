@@ -205,7 +205,11 @@ function CategoriesContent() {
                           <p className="text-sm text-gray-500 mt-1">
                             {business.city} • {business.phone}
                           </p>
-                          <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                          <p className="text-sm text-gray-600 mt-2 overflow-hidden" style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical'
+                          }}>
                             {business.description}
                           </p>
                           <div className="mt-3 flex items-center gap-1 text-[#60a5fa] text-sm font-medium">
@@ -231,7 +235,7 @@ function CategoriesContent() {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCat(cat.id)}
-                    className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover flex items-center gap-5 text-left w-full"
+                    className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#60a5fa]/20 transition-all duration-200 flex items-center gap-5 text-left w-full"
                   >
                     <div
                       className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shrink-0 transition-transform duration-200 group-hover:scale-110"
