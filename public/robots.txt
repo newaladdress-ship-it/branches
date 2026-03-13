@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+
+# Block unnecessary crawlers
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Block admin and private areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /.well-known/
+
+# Allow all public pages
+Allow: /categories
+Allow: /cities
+Allow: /blog
+Allow: /about
+Allow: /contact
+Allow: /add-business
+
+# Sitemap location
+Sitemap: https://pakbizbranhces.online/sitemap.xml
+
+# Crawl delay (optional - remove if not needed)
+Crawl-delay: 1
