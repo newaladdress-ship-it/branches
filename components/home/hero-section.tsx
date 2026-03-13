@@ -37,13 +37,12 @@ export default function HeroSection() {
 
         <h1
           id="hero-heading"
-          className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight text-balance"
+          className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4"
         >
-          Find Local Companies{' '}
-          <span className="text-[#60a5fa]">in Pakistan</span>
+          PakBizBranches: Pakistan Free Business Directory
         </h1>
-        <p className="mt-5 text-white/65 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto text-pretty">
-          Discover trusted businesses, services, and professionals across 150+ cities. Your search starts here.
+        <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
+          Find local businesses by city and category. List your business free—no fees, no credit card. For Pakistan.
         </p>
 
         {/* Search Bar */}

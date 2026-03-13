@@ -1,15 +1,14 @@
 const stats = [
-  { value: '50,000+', label: 'Businesses Listed', icon: '🏢' },
-  { value: '200+', label: 'Categories', icon: '📂' },
-  { value: '150+', label: 'Cities Covered', icon: '🏙️' },
-  { value: '1M+', label: 'Monthly Visitors', icon: '👥' },
+  { value: '50K+', label: 'Businesses', icon: '🏢' },
+  { value: '2M+', label: 'Users', icon: '�' },
+  { value: '1M+', label: 'Reviews', icon: '⭐' },
 ]
 
 export default function StatsSection() {
   return (
     <section className="bg-[#f8fafc] py-14" aria-label="Directory statistics">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {stats.map((stat) => (
             <div
               key={stat.label}

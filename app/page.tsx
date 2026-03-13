@@ -1,6 +1,7 @@
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import HeroSection from '@/components/home/hero-section'
+import AboutSection from '@/components/home/about-section'
 import StatsSection from '@/components/home/stats-section'
 import LatestBusinesses from '@/components/home/latest-businesses'
 import CategoriesGrid from '@/components/home/categories-grid'
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Navbar />
       <main id="main-content">
         <HeroSection />
+        <AboutSection />
         <StatsSection />
         <LatestBusinesses />
         <CategoriesGrid />
