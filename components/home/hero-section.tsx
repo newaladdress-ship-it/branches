@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Search, MapPin } from 'lucide-react'
 import { CITIES } from '@/lib/data'
 
@@ -99,6 +100,23 @@ export default function HeroSection() {
           >
             Browse Businesses
           </button>
+        </div>
+
+        {/* Additional Links */}
+        <div className="mt-6 flex items-center justify-center gap-6">
+          <Link
+            href="/blog"
+            className="text-white/60 hover:text-white text-sm transition-colors"
+          >
+            📚 Business Guide
+          </Link>
+          <span className="text-white/30">•</span>
+          <Link
+            href="/blog/how-to-add-business"
+            className="text-white/60 hover:text-white text-sm transition-colors"
+          >
+            💡 How to Add Business Free
+          </Link>
         </div>
 
         <p className="mt-6 text-white/40 text-sm">
