@@ -3,10 +3,11 @@
 import { useState, useMemo, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Search, MapPin, SlidersHorizontal, ArrowRight, Building2 } from 'lucide-react'
+import { Search, MapPin, SlidersHorizontal, ArrowRight, Building2, TrendingUp, Star } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CATEGORIES, CITIES } from '@/lib/data'
+import { CATEGORY_ICONS, CATEGORY_GRADIENTS, CATEGORY_BG_COLORS } from '@/lib/categories'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore'
 
@@ -184,36 +185,48 @@ function CategoriesContent() {
                     <Link
                       key={business.id}
                       href={business.slug ? `/${business.slug}` : `/business/${business.id}`}
-                      className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200"
+                      className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#60a5fa]/20 transition-all duration-300 hover:-translate-y-1"
                     >
                       <div className="flex items-start gap-4">
                         {business.logoUrl ? (
-                          <img
-                            src={business.logoUrl}
-                            alt={`${business.businessName} logo`}
-                            className="w-16 h-16 rounded-xl object-cover border border-gray-100"
-                          />
+                          <div className="relative">
+                            <img
+                              src={business.logoUrl}
+                              alt={`${business.businessName} logo`}
+                              className="w-16 h-16 rounded-xl object-cover border border-gray-100 group-hover:shadow-lg transition-shadow"
+                            />
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#60a5fa] rounded-full flex items-center justify-center">
+                              <Star className="w-2 h-2 text-white fill-white" />
+                            </div>
+                          </div>
                         ) : (
-                          <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center border border-gray-200 group-hover:shadow-lg transition-shadow">
                             <Building2 className="w-8 h-8 text-gray-400" />
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-[#0f2b3d] text-lg group-hover:text-[#60a5fa] transition-colors">
+                          <h3 className="font-bold text-[#0f2b3d] text-lg group-hover:text-[#60a5fa] transition-colors line-clamp-1">
                             {business.businessName}
                           </h3>
-                          <p className="text-sm text-gray-500 mt-1">
-                            {business.city} • {business.phone}
-                          </p>
-                          <p className="text-sm text-gray-600 mt-2 overflow-hidden" style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical'
-                          }}>
+                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                            <MapPin className="w-3 h-3" />
+                            <span>{business.city}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                            <span className="font-medium">{business.phone}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-3 overflow-hidden line-clamp-2 leading-relaxed">
                             {business.description}
                           </p>
-                          <div className="mt-3 flex items-center gap-1 text-[#60a5fa] text-sm font-medium">
-                            View Details <ArrowRight className="w-4 h-4" />
+                          <div className="mt-4 flex items-center justify-between">
+                            <div className="flex items-center gap-1 text-[#60a5fa] text-sm font-medium">
+                              <span>View Details</span>
+                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                            <div className="flex items-center gap-1 text-xs text-gray-400">
+                              <Star className="w-3 h-3" />
+                              <span>Featured</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -230,37 +243,59 @@ function CategoriesContent() {
                 <p className="mt-2 text-sm">Try a different search term</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filtered.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCat(cat.id)}
-                    className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#60a5fa]/20 transition-all duration-200 flex items-center gap-5 text-left w-full"
-                  >
-                    <div
-                      className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shrink-0 transition-transform duration-200 group-hover:scale-110"
-                      style={{ backgroundColor: cat.color + '1a' }}
-                      aria-hidden="true"
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filtered.map((cat) => {
+                  const IconComponent = CATEGORY_ICONS[cat.id as keyof typeof CATEGORY_ICONS]
+                  const gradient = CATEGORY_GRADIENTS[cat.id as keyof typeof CATEGORY_GRADIENTS]
+                  const bgColor = CATEGORY_BG_COLORS[cat.id as keyof typeof CATEGORY_BG_COLORS]
+                  
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCat(cat.id)}
+                      className={`group relative overflow-hidden rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 ${bgColor}`}
                     >
-                      {cat.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h2 className="font-semibold text-[#0f2b3d] text-base">{cat.name}</h2>
-                      <p className="text-sm text-gray-400 mt-0.5">
-                        {cat.count.toLocaleString()} listings
-                        {city ? ` in ${city}` : ' across Pakistan'}
-                      </p>
-                      <div className="mt-2 flex items-center gap-1 text-[#60a5fa] text-xs font-medium">
-                        Browse listings <ArrowRight className="w-3 h-3" />
+                      {/* Background Pattern */}
+                      <div className="absolute inset-0 opacity-5">
+                        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white to-black"></div>
                       </div>
-                    </div>
-                    <div
-                      className="w-1 self-stretch rounded-full shrink-0"
-                      style={{ backgroundColor: cat.color }}
-                      aria-hidden="true"
-                    />
-                  </button>
-                ))}
+                      
+                      {/* Icon Container */}
+                      <div className={`relative w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${gradient} shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-10 h-10 text-white drop-shadow-lg" />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="relative text-center">
+                        <h2 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-gray-700 transition-colors">
+                          {cat.name}
+                        </h2>
+                        
+                        {/* Stats */}
+                        <div className="flex items-center justify-center gap-3 text-sm text-gray-600 mb-3">
+                          <div className="flex items-center gap-1">
+                            <Building2 className="w-4 h-4" />
+                            <span>{cat.count.toLocaleString()}</span>
+                          </div>
+                          <span className="text-gray-400">•</span>
+                          <div className="flex items-center gap-1 text-amber-500">
+                            <TrendingUp className="w-4 h-4" />
+                            <span className="text-xs">Popular</span>
+                          </div>
+                        </div>
+                        
+                        {/* Hover Effect */}
+                        <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <span>Explore</span>
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                      
+                      {/* Decorative Elements */}
+                      <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-white/60"></div>
+                    </button>
+                  )
+                })}
               </div>
             )
           )}
