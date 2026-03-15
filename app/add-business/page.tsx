@@ -6,9 +6,10 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { db, storage } from '@/lib/firebase'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import Link from 'next/link'
+import { sendBusinessSubmissionEmail } from '@/lib/email-service'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -132,7 +133,14 @@ export default function AddBusinessPage() {
     if (!form.category) newErrors.category = 'Category is required'
     if (!form.address.trim()) newErrors.address = 'Complete address is required'
     if (!form.description.trim()) newErrors.description = 'Business description is required'
+    if (!form.email.trim()) newErrors.email = 'Email address is required'
     // Logo is optional for now
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (form.email && !emailRegex.test(form.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
     
     // Phone number validation (Pakistan format - exactly 10 digits)
     const phoneRegex = /^[0-9]{10}$/
@@ -175,6 +183,23 @@ export default function AddBusinessPage() {
     return Object.keys(newErrors).length === 0
   }
 
+  // Check if email is already used for another business
+  async function checkEmailAvailability(): Promise<boolean> {
+    if (!form.email.trim()) return false
+    
+    try {
+      const q = query(
+        collection(db, 'businesses'),
+        where('email', '==', form.email.trim())
+      )
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.empty // Return true if email is available (no existing business)
+    } catch (error) {
+      console.error('Error checking email availability:', error)
+      return false
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     console.log('Submit button clicked!', { form, status })
@@ -188,6 +213,17 @@ export default function AddBusinessPage() {
     console.log('Setting status to loading...')
     
     try {
+      // Check if email is already used for another business
+      const emailAvailable = await checkEmailAvailability()
+      if (!emailAvailable) {
+        setErrors(prev => ({ 
+          ...prev, 
+          email: 'This email is already registered with another business. One email can only be used for one business registration.' 
+        }))
+        setStatus('idle')
+        return
+      }
+      
       // Create slug for business
       const slug = createSlug(form.businessName, form.city)
       console.log('Generated slug:', slug)
@@ -219,6 +255,20 @@ export default function AddBusinessPage() {
       console.log('Saving business data:', businessData)
       const docRef = await addDoc(collection(db, 'businesses'), businessData)
       console.log('Business data saved successfully with ID:', docRef.id)
+      
+      // Send thank you email with referral request
+      const emailSent = await sendBusinessSubmissionEmail({
+        to: form.email,
+        businessName: form.businessName,
+        businessId: docRef.id
+      })
+      
+      if (emailSent) {
+        console.log('Thank you email sent successfully')
+      } else {
+        console.error('Failed to send thank you email')
+      }
+      
       setBusinessId(docRef.id)
       setStatus('success')
     } catch (err) {
