@@ -2,19 +2,7 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import Link from 'next/link'
 import { Calendar, ArrowRight, Building2, Clock, User, Star } from 'lucide-react'
-
-const blogPosts = [
-  {
-    title: "How to Add Your Business to PakBizBranches",
-    description: "A complete step-by-step guide to list your business on Pakistan's fastest-growing business directory",
-    slug: "how-to-add-business",
-    date: "March 13, 2026",
-    readTime: "8 min read",
-    author: "PakBizBranches Team",
-    category: "Business Guide",
-    featured: true
-  }
-]
+import { BLOG_POSTS, FEATURED_POSTS, RECENT_POSTS } from '@/lib/blog-data'
 
 export default function BlogPage() {
   return (
@@ -48,7 +36,7 @@ export default function BlogPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
+              {BLOG_POSTS.map((post, index) => (
                 <article
                   key={post.slug}
                   className={`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 ${
@@ -79,7 +67,7 @@ export default function BlogPage() {
                     </h3>
                     
                     <p className="text-gray-600 mb-6 leading-relaxed">
-                      {post.description}
+                      {post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between">
