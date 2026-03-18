@@ -39,10 +39,10 @@ export default function HeroSection() {
           id="hero-heading"
           className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4"
         >
-          PakBizBranches: Pakistan Free Business Directory
+          PakBizBranches: Pakistan Free Business Listing Directory
         </h1>
         <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
-          Find local businesses by city and category. List your business free—no fees, no credit card. For Pakistan.
+          Find local businesses phone numbers by city and category. Add your business free without registration—no fees, no credit card. The best platform for free local citations in Pakistan with WhatsApp numbers.
         </p>
 
         {/* Search Bar */}
