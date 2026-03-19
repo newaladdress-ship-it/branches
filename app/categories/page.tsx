@@ -73,21 +73,25 @@ function CategoriesContent() {
         console.log('All approved businesses:', allBusinesses.length)
         console.log('Sample business categories:', allBusinesses.slice(0, 5).map(b => ({ name: b.businessName, category: b.category })))
         
-        // Filter businesses using the new category mapping system
+        // Filter businesses using new category mapping system
         const filteredBusinesses = allBusinesses.filter(business => {
-          return isBusinessInCategory(business.category || '', selectedCat)
+          // Filter by category if selected
+          if (selectedCat && !isBusinessInCategory(business.category || '', selectedCat)) {
+            return false
+          }
+          
+          // Filter by city if selected
+          if (city && business.city?.toLowerCase() !== city.toLowerCase()) {
+            return false
+          }
+          
+          return true
         })
         
         console.log('Filtered businesses for category:', filteredBusinesses.length)
         console.log('Filtered business names:', filteredBusinesses.map(b => b.businessName))
         
-        // If city is specified, further filter by city
-        const finalBusinesses = city 
-          ? filteredBusinesses.filter(business => business.city?.toLowerCase() === city.toLowerCase())
-          : filteredBusinesses
-        
-        console.log('Final businesses after city filter:', finalBusinesses.length)
-        setBusinesses(finalBusinesses)
+        setBusinesses(filteredBusinesses)
         
       } catch (error) {
         console.error('Error fetching businesses:', error)

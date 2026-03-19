@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Search, Edit2, Trash2, Eye, Users, Building2, Mail, Phone, Shield, LogOut, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
+import AdminAuthGuard from '@/components/admin-auth-guard'
 import { db } from '@/lib/firebase'
 import { collection, query, orderBy, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore'
 
@@ -218,7 +219,7 @@ export default function AdminPage() {
   }
 
   return (
-    <>
+    <AdminAuthGuard>
       <div className="min-h-screen bg-gray-50">
         {/* Admin Header */}
         <header className="bg-white border-b border-gray-200">
