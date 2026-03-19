@@ -29,7 +29,7 @@ export default function HeroSection() {
       <div aria-hidden="true" className="absolute -bottom-32 -left-32 w-[32rem] h-[32rem] rounded-full bg-[#0ea5e9]/8" />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p className="inline-flex items-center gap-2 text-[#60a5fa] font-semibold text-sm mb-4 tracking-wide uppercase">
+        <p className="inline-flex items-center gap-2 text-[#60a5fa] font-semibold text-sm mb-6 tracking-wide uppercase">
           <span className="w-6 h-px bg-[#60a5fa]" />
           Pakistan&apos;s #1 Business Directory
           <span className="w-6 h-px bg-[#60a5fa]" />
