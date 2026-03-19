@@ -24,9 +24,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-[#60a5fa] flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-white" />
-            </div>
+            <img 
+              src="/logo.svg" 
+              alt="PakBizBranches Logo" 
+              className="w-10 h-6"
+            />
             <span className="text-white font-bold text-xl tracking-tight">
               PakBiz<span className="text-[#60a5fa]">Branches</span>
             </span>

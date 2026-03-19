@@ -7,6 +7,16 @@ export const metadata: Metadata = {
   keywords: 'Pakistan business directory, free business listing Pakistan without registration, free local citations pakistan, local businesses phone numbers in pakistan, verified local services near me pakistan, add business to google maps pakistan alternative, best companies in pakistan contact details, pakistan business directory with whatsapp numbers, Pakistani business listing site, add business free Pakistan, local businesses Pakistan, find businesses Pakistan, companies directory Pakistan',
   authors: [{ name: 'PakBizBranches', url: 'https://pakbizbranhces.online' }],
   metadataBase: new URL('https://pakbizbranhces.online'),
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon-light-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-dark-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     title: 'PakBizBranches – Pakistan Free Business Listing Directory Without Registration',
     description:

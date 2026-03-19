@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { Search, MapPin, SlidersHorizontal, ArrowRight, Building2, TrendingUp, Star } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { CATEGORIES, CITIES } from '@/lib/data'
+import CitySearchDropdown from '@/components/ui/city-search-dropdown'
+import { CATEGORIES } from '@/lib/data'
 import { CATEGORY_ICONS, CATEGORY_GRADIENTS, CATEGORY_BG_COLORS } from '@/lib/categories'
 import { getCategoryIdFromName, isBusinessInCategory } from '@/lib/category-mappings'
 import { db } from '@/lib/firebase'
@@ -124,19 +125,14 @@ function CategoriesContent() {
                 aria-label="Search categories"
               />
             </div>
-            <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-2.5 sm:w-48">
+            <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-2.5 flex-1">
               <MapPin className="w-4 h-4 text-gray-400 shrink-0" aria-hidden="true" />
-              <select
+              <CitySearchDropdown
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="flex-1 text-sm text-gray-600 bg-transparent outline-none cursor-pointer"
-                aria-label="Select city"
-              >
-                <option value="">All Cities</option>
-                {CITIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+                onChange={setCity}
+                placeholder="All Cities"
+                className="flex-1"
+              />
             </div>
             <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-2.5">
               <SlidersHorizontal className="w-4 h-4 text-gray-400" aria-hidden="true" />

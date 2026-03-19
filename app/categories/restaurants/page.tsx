@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Search, MapPin, ArrowLeft, Building2, Star, TrendingUp, Clock, Phone, Mail } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
-import { CITIES } from '@/lib/data'
+import CitySearchDropdown from '@/components/ui/city-search-dropdown'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore'
 
@@ -90,16 +90,12 @@ export default function RestaurantsPage() {
             <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl p-4 flex flex-col sm:flex-row gap-3">
               <div className="flex items-center gap-2 flex-1 bg-white rounded-xl px-4 py-2.5">
                 <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
-                <select
+                <CitySearchDropdown
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="flex-1 text-sm text-gray-700 bg-transparent outline-none cursor-pointer"
-                >
-                  <option value="">All Cities</option>
-                  {CITIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  onChange={setCity}
+                  placeholder="All Cities"
+                  className="flex-1"
+                />
               </div>
               <Link
                 href="/add-business"
