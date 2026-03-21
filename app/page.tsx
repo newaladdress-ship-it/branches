@@ -7,6 +7,7 @@ import LatestBusinesses from '@/components/home/latest-businesses'
 import CategoriesGrid from '@/components/home/categories-grid'
 import CitiesGrid from '@/components/home/cities-grid'
 import CTASection from '@/components/home/cta-section'
+import BusinessDebug from '@/components/debug/business-stats'
 
 export default function HomePage() {
   return (
@@ -16,6 +17,7 @@ export default function HomePage() {
         <HeroSection />
         <AboutSection />
         <StatsSection />
+        <BusinessDebug />
         <LatestBusinesses />
         <CategoriesGrid />
         <CitiesGrid />
