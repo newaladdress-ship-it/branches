@@ -24,7 +24,7 @@ export default function AdminAuthGuard({ children }: { children: React.ReactNode
     setIsLoading(true)
     setError('')
 
-    if (password === 'admin123') {
+    if (password === 'PakBiz@2026!Admin') {
       localStorage.setItem('admin_auth', 'authenticated')
       setIsAuthenticated(true)
     } else {
