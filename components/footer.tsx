@@ -9,29 +9,35 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <img 
-                src="/logo.svg" 
-                alt="PakBizBranches Logo" 
+              <svg
+                width="32"
+                height="24"
+                viewBox="0 0 40 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
                 className="w-8 h-6"
-              />
-                    <rect x="3" y="5" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="5" y="5" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="1" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="3" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="5" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="1" y="10" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="3" y="10" width="1.5" height="1.5" fill="#ffffff"/>
-                    <rect x="5" y="10" width="1.5" height="1.5" fill="#ffffff"/>
-                    {/* Door */}
-                    <rect x="3.5" y="13" width="1" height="1" fill="#ffffff"/>
-                  </g>
-                  {/* Location pin icon */}
-                  <g transform="translate(32, 8)">
-                    <circle cx="3" cy="3" r="2" fill="#60a5fa"/>
-                    <circle cx="3" cy="3" r="0.8" fill="#ffffff"/>
-                    <path d="M3,5 C3,5 3,6 3,6" stroke="#60a5fa" stroke-width="0.8" fill="none"/>
-                  </g>
-                </svg>
+              >
+                {/* Building icon */}
+                <g>
+                  <rect x="8" y="4" width="24" height="16" fill="#60a5fa" rx="2"/>
+                  <rect x="3" y="5" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="5" y="5" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="1" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="3" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="5" y="7.5" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="1" y="10" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="3" y="10" width="1.5" height="1.5" fill="#ffffff"/>
+                  <rect x="5" y="10" width="1.5" height="1.5" fill="#ffffff"/>
+                  {/* Door */}
+                  <rect x="3.5" y="13" width="1" height="1" fill="#ffffff"/>
+                </g>
+                {/* Location pin icon */}
+                <g transform="translate(32, 8)">
+                  <circle cx="3" cy="3" r="2" fill="#60a5fa"/>
+                  <circle cx="3" cy="3" r="0.8" fill="#ffffff"/>
+                  <path d="M3,5 C3,5 3,6 3,6" stroke="#60a5fa" stroke-width="0.8" fill="none"/>
+                </g>
+              </svg>
               </div>
               <span className="text-white font-bold text-xl">
                 PakBiz<span className="text-[#60a5fa]">Branches</span>
