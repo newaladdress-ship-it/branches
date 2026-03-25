@@ -117,8 +117,8 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
   const similarBusinesses = await getSimilarBusinesses(business.city, business.category, params.slug)
 
   const pageUrl = `https://pakbizbranhces.online/${params.slug}`
-  const categoryUrl = `/category/${business.category}`
-  const cityUrl = `/cities/${encodeURIComponent(business.city.toLowerCase())}`
+  const categoryUrl = `/categories/${business.category}`
+  const cityUrl = `/cities/${encodeURIComponent(business.city.toLowerCase().replace(/ /g, '-'))}`
 
   const localBusinessSchema = {
     '@context': 'https://schema.org',
@@ -488,7 +488,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
                 </div>
                 <div className="mt-4 text-center">
                   <Link
-                    href={`/businesses/${business.city.toLowerCase()}/${business.category}`}
+                    href={`/locations/${business.city.toLowerCase().replace(/ /g, '-')}/${business.category}`}
                     className="inline-flex items-center gap-2 text-[#60a5fa] hover:text-blue-600 font-medium text-sm transition-colors"
                   >
                     View all {category?.name} businesses in {business.city}

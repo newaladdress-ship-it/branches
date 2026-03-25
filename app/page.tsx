@@ -7,20 +7,28 @@ import LatestBusinesses from '@/components/home/latest-businesses'
 import CategoriesGrid from '@/components/home/categories-grid'
 import CitiesGrid from '@/components/home/cities-grid'
 import CTASection from '@/components/home/cta-section'
-import BusinessDebug from '@/components/debug/business-stats'
+import { BreadcrumbSchema, DirectorySchema } from '@/components/seo/breadcrumb-schema'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Pakistan Business Directory | 50,000+ Local Businesses | List Free',
+  description: 'Find verified Pakistani businesses by city & category. Get phone numbers, WhatsApp details & addresses. List your business free - no registration required. Instant approval.',
+  alternates: { canonical: 'https://pakbizbranhces.online/' },
+}
 
 export default function HomePage() {
   return (
     <>
+      <BreadcrumbSchema pathname="/" />
+      <DirectorySchema />
       <Navbar />
       <main id="main-content">
         <HeroSection />
-        <AboutSection />
         <StatsSection />
-        <BusinessDebug />
-        <LatestBusinesses />
         <CategoriesGrid />
+        <LatestBusinesses />
         <CitiesGrid />
+        <AboutSection />
         <CTASection />
       </main>
       <Footer />

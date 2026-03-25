@@ -1,0 +1,84 @@
+'use client'
+
+interface BusinessData {
+  name: string
+  phone: string
+  address: string
+  city: string
+  category: string
+  description?: string
+  website?: string
+  logo?: string
+}
+
+export function LocalBusinessSchema({ business }: { business: BusinessData }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: business.name,
+    description: business.description || `${business.name} - ${business.category} in ${business.city}`,
+    url: business.website || `https://pakbizbranhces.online`,
+    telephone: business.phone,
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'PK',
+      addressLocality: business.city,
+      streetAddress: business.address
+    },
+    category: business.category,
+    serviceType: business.category,
+    areaServed: {
+      '@type': 'Country',
+      name: 'Pakistan'
+    },
+    logo: business.logo || 'https://pakbizbranhces.online/logo.svg',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: business.phone,
+      contactType: 'customer service',
+      areaServed: business.city
+    }
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
+export function DirectorySchema() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'PakBizBranches',
+    description: 'Pakistan Free Business Directory - Find and list local businesses',
+    url: 'https://pakbizbranhces.online',
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'PakBizBranches',
+      url: 'https://pakbizbranhces.online',
+      description: 'Pakistan Free Business Directory',
+      areaServed: {
+        '@type': 'Country',
+        name: 'Pakistan'
+      }
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://pakbizbranhces.online/categories?q={search_term_string}'
+      },
+      'query-input': 'required name=search_term_string'
+    }
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}

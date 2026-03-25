@@ -75,7 +75,6 @@ export default function Footer() {
                 { href: '/blog', label: 'Blog & Resources' },
                 { href: '/about', label: 'About Us' },
                 { href: '/contact', label: 'Contact' },
-                { href: '/developer', label: 'Developer Notes' },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-white/60 hover:text-[#60a5fa] transition-colors">
@@ -91,14 +90,14 @@ export default function Footer() {
             <h3 className="font-semibold text-white mb-4">Top Categories</h3>
             <ul className="space-y-2.5 text-sm">
               {[
-                { href: '/category/restaurants', label: 'Restaurants & Food' },
-                { href: '/category/real-estate', label: 'Real Estate' },
-                { href: '/category/technology', label: 'Technology & IT' },
-                { href: '/category/healthcare', label: 'Healthcare' },
-                { href: '/category/education', label: 'Education' },
-                { href: '/category/retail', label: 'Retail & Shopping' },
-                { href: '/category/automotive', label: 'Automotive' },
-                { href: '/category/beauty', label: 'Beauty & Wellness' },
+                { href: '/categories/restaurants', label: 'Restaurants & Food' },
+                { href: '/categories/real-estate', label: 'Real Estate' },
+                { href: '/categories/technology', label: 'Technology & IT' },
+                { href: '/categories/healthcare', label: 'Healthcare' },
+                { href: '/categories/education', label: 'Education' },
+                { href: '/categories/retail', label: 'Retail & Shopping' },
+                { href: '/categories/automotive', label: 'Automotive' },
+                { href: '/categories/beauty', label: 'Beauty & Wellness' },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-white/60 hover:text-[#60a5fa] transition-colors">

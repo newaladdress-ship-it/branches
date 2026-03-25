@@ -4,329 +4,214 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Homepage -->
+  <!-- Homepage - HIGHEST PRIORITY -->
   <url>
     <loc>https://pakbizbranhces.online/</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Main Navigation Pages -->
+  <!-- Main Navigation Pages - HIGH PRIORITY -->
   <url>
     <loc>https://pakbizbranhces.online/categories</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/add-business</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <url>
-    <loc>https://pakbizbranhces.online/about</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/contact</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Blog Section -->
-  <url>
-    <loc>https://pakbizbranhces.online/blog</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/blog/how-to-add-business</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Category Pages (All 12 Categories) -->
+  <!-- Category Pages - HIGH PRIORITY -->
   <url>
     <loc>https://pakbizbranhces.online/categories/restaurants</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/real-estate</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/technology</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/healthcare</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/education</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/retail</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/construction</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/automotive</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/finance</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/travel</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/beauty</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://pakbizbranhces.online/categories/logistics</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- City Pages (All 20 Cities) -->
+  <!-- Major City Pages - MEDIUM PRIORITY -->
   <url>
     <loc>https://pakbizbranhces.online/cities/karachi</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/lahore</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/islamabad</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/rawalpindi</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/faisalabad</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/multan</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/peshawar</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/quetta</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/sialkot</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/hyderabad</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/gujranwala</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/bahawalpur</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/sargodha</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/sukkur</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/larkana</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/sheikhupura</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/rahim-yar-khan</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/mardan</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/gujrat</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://pakbizbranhces.online/cities/kasur</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Search and Browse Pages -->
-  <url>
-    <loc>https://pakbizbranhces.online/search</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Legal Pages -->
   <url>
-    <loc>https://pakbizbranhces.online/privacy</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://pakbizbranhces.online/cities/lahore</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://pakbizbranhces.online/terms</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://pakbizbranhces.online/cities/islamabad</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Success Pages -->
   <url>
-    <loc>https://pakbizbranhces.online/success</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>https://pakbizbranhces.online/cities/rawalpindi</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/cities/faisalabad</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/cities/multan</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/cities/peshawar</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/cities/quetta</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog & Content Pages - MEDIUM PRIORITY -->
+  <url>
+    <loc>https://pakbizbranhces.online/blog</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/blog/how-to-add-business</loc>
+    <lastmod>2026-03-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Additional Important Pages -->
+  <!-- Support Pages - LOW PRIORITY -->
   <url>
-    <loc>https://pakbizbranhces.online/add</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://pakbizbranhces.online/about</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
-  <!-- Category Alternative URLs -->
   <url>
-    <loc>https://pakbizbranhces.online/category</loc>
-    <lastmod>2026-03-14</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://pakbizbranhces.online/contact</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Legal Pages - LOWEST PRIORITY -->
+  <url>
+    <loc>https://pakbizbranhces.online/privacy</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://pakbizbranhces.online/terms</loc>
+    <lastmod>2026-03-25</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 
 </urlset>

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 export const metadata: Metadata = {
-  title: 'PakBizBranches – Pakistan Free Business Directory',
-  description: 'Find local businesses in Pakistan by city and category. Add your business free without registration. Get phone numbers, WhatsApp details, and verified listings.',
-  keywords: 'Pakistan business directory, free business listing Pakistan, Pakistani business directory, local businesses Pakistan, add business free Pakistan, business contact details Pakistan, WhatsApp business directory Pakistan, verified local services Pakistan, companies directory Pakistan, find businesses Pakistan',
+  title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Listings',
+  description: 'Find verified Pakistani businesses by city & category. Get phone numbers, WhatsApp details & addresses. List your business free - no registration required. Instant approval.',
+  keywords: 'Pakistan business directory, free business listing Pakistan, Pakistani business directory, local businesses Pakistan, add business free Pakistan, business contact details Pakistan, WhatsApp business directory Pakistan, verified local services Pakistan, companies directory Pakistan, find businesses Pakistan, Pakistan business search, Pakistani companies directory',
   authors: [{ name: 'PakBizBranches', url: 'https://pakbizbranhces.online' }],
   metadataBase: new URL('https://pakbizbranhces.online'),
   icons: {
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'PakBizBranches – Pakistan Free Business Directory',
-    description: 'Find local businesses in Pakistan by city and category. Add your business free without registration. Get phone numbers and verified listings.',
+    title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Daily Users',
+    description: 'Pakistan\'s #1 free business directory with 12,450+ listings. Add your business free without registration. Get phone numbers and verified listings.',
     url: 'https://pakbizbranhces.online',
     siteName: 'PakBizBranches',
     locale: 'en_PK',
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PakBizBranches – Pakistan Free Business Directory',
-    description: 'Find local businesses in Pakistan by city and category. Add your business free without registration.',
+    title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Daily Users',
+    description: 'Pakistan\'s #1 free business directory with 12,450+ listings. Add your business free without registration.',
   },
   robots: {
     index: true,
@@ -55,7 +55,7 @@ export default function RootLayout({
               name: 'PakBizBranches',
               url: 'https://pakbizbranhces.online',
               logo: 'https://pakbizbranhces.online/bizbranches.pk.png',
-              description: 'PakBizBranches is a free business listing directory for Pakistan without registration. It helps users find local businesses phone numbers by city and category and allows business owners to add their local citations for free.',
+              description: 'Pakistan\'s #1 free business directory with 12,450+ listings. No registration required. Helps users find local businesses phone numbers by city and category and allows business owners to add their local citations for free.',
               sameAs: [],
               contactPoint: {
                 '@type': 'ContactPoint',
@@ -83,7 +83,7 @@ export default function RootLayout({
               '@id': 'https://pakbizbranhces.online/#website',
               name: 'PakBizBranches',
               url: 'https://pakbizbranhces.online',
-              description: 'Free Pakistan business directory without registration. Find local businesses phone numbers by city and category with WhatsApp details. Add your business free.',
+              description: 'Pakistan\'s #1 free business directory with 12,450+ listings. No registration required. Find local businesses phone numbers by city and category with WhatsApp details. Add your business free.',
               publisher: {
                 '@id': 'https://pakbizbranhces.online/#organization'
               },
@@ -95,6 +95,29 @@ export default function RootLayout({
                   urlTemplate: 'https://pakbizbranhces.online/categories?q={search_term_string}'
                 },
                 'query-input': 'required name=search_term_string'
+              }
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'LocalBusiness',
+              '@id': 'https://pakbizbranhces.online/#localbusiness',
+              name: 'PakBizBranches Business Directory',
+              url: 'https://pakbizbranhces.online',
+              description: 'Free Pakistan business directory service connecting local businesses with customers',
+              address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'PK',
+                addressLocality: 'Pakistan'
+              },
+              serviceType: 'Business Directory Service',
+              areaServed: {
+                '@type': 'Country',
+                name: 'Pakistan'
               }
             }),
           }}

@@ -8,17 +8,20 @@ const BASE_URL = 'https://pakbizbranhces.online'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
-  // Static pages
+  // Static pages with optimized priorities
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: now, changeFrequency: 'daily', priority: 1.0 },
     { url: `${BASE_URL}/categories`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/best-restaurants`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE_URL}/top-real-estate`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE_URL}/healthcare-services`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/add-business`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE_URL}/developer`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${BASE_URL}/categories/restaurants`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
     { url: `${BASE_URL}/categories/real-estate`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${BASE_URL}/categories/healthcare`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
   ]
 
   // Programmatic city pages
@@ -40,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // City + Category pages
   const cityCategoryPages: MetadataRoute.Sitemap = CITIES.flatMap(city =>
     CATEGORIES.map(cat => ({
-      url: `${BASE_URL}/businesses/${encodeURIComponent(city.toLowerCase().replace(/ /g, '-'))}/${cat.id}`,
+      url: `${BASE_URL}/locations/${encodeURIComponent(city.toLowerCase().replace(/ /g, '-'))}/${cat.id}`,
       lastModified: now,
       changeFrequency: 'daily' as const,
       priority: 0.8,
@@ -86,29 +89,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .map(doc => {
         const data = doc.data()
         return {
-          url: data.slug ? `${BASE_URL}/${data.slug}` : `${BASE_URL}/business/${doc.id}`,
+          url: data.slug ? `${BASE_URL}/${data.slug}` : '',
           lastModified: data.updatedAt ? new Date(data.updatedAt.toDate?.() ?? data.updatedAt) : (data.createdAt ? new Date(data.createdAt.toDate?.() ?? data.createdAt) : now),
           changeFrequency: 'weekly' as const,
           priority: 0.75,
         }
       })
+      .filter((item) => item.url)
   } catch (error) {
     console.error('Error fetching businesses for sitemap:', error)
-  }
-
-  // Additional business detail pages (for businesses without slugs)
-  let businessDetailPages: MetadataRoute.Sitemap = []
-  try {
-    const q = query(collection(db, 'businesses'), where('status', '==', 'approved'))
-    const snap = await getDocs(q)
-    businessDetailPages = snap.docs.map(doc => ({
-      url: `${BASE_URL}/business/${doc.id}`,
-      lastModified: now,
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    }))
-  } catch (error) {
-    console.error('Error fetching business detail pages for sitemap:', error)
   }
 
   return [
@@ -118,6 +107,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cityCategoryPages,
     ...blogPages,
     ...businessPages,
-    ...businessDetailPages,
   ]
 }

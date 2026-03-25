@@ -33,10 +33,18 @@ export default function CategoriesGrid() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
           {CATEGORIES.map((cat) => {
             const IconComponent = categoryIcons[cat.id]
+            // Map category to special landing pages for high-value categories
+            const getSpecialLink = (catId: string) => {
+              if (catId === 'restaurants') return '/best-restaurants'
+              if (catId === 'real-estate') return '/top-real-estate'
+              if (catId === 'healthcare') return '/healthcare-services'
+              return `/categories/${cat.id}`
+            }
+            
             return (
               <Link
                 key={cat.id}
-                href={`/category/${cat.id}`}
+                href={getSpecialLink(cat.id)}
                 className="group bg-white border border-slate-200 rounded-2xl p-5 flex flex-col items-center text-center hover:shadow-lg hover:border-blue-300 transition-all duration-300 hover:-translate-y-1"
               >
                 <div

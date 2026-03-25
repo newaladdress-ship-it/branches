@@ -15,9 +15,9 @@ import { collection, query, where, getDocs, orderBy, limit } from 'firebase/fire
 
 // Add metadata for SEO
 export const metadata = {
-  title: 'Browse Business Categories – PakBizBranches Pakistan',
-  description: 'Explore all business categories in Pakistan. Find restaurants, real estate, healthcare, education, technology, and more. Search by city and category for local businesses.',
-  keywords: 'Pakistan business categories, business directory Pakistan, find businesses by category Pakistan, local business categories Pakistan, business types Pakistan',
+  title: 'Pakistan Business Categories | Find Local Services & Companies',
+  description: 'Browse all business categories in Pakistan. Find restaurants, real estate, healthcare, education, technology, and more. Search by city and category for local businesses with phone numbers.',
+  keywords: 'Pakistan business categories, business directory Pakistan, find businesses by category Pakistan, local business categories Pakistan, business types Pakistan, Pakistani services directory',
 }
 
 interface Business {

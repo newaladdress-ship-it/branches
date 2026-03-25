@@ -30,21 +30,17 @@ export default function HeroSection() {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="inline-flex items-center gap-2 text-[#60a5fa] font-semibold text-sm mb-4 tracking-wide uppercase">
-          <span className="w-4 h-px bg-[#60a5fa]" />
-          Pakistan's #1
-          <span className="w-4 h-px bg-[#60a5fa]" />
-          Business Directory
-          <span className="w-4 h-px bg-[#60a5fa]" />
+          Pakistan Business Directory
         </p>
 
         <h1
           id="hero-heading"
           className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4"
         >
-          Tired of Your Business Being Invisible Online?
+          Pakistan Business Directory - Find & List Local Businesses Free
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto">
-          Every day, thousands of Pakistani customers are searching for businesses like yours. But if you're not listed where they're looking, you're losing money to competitors. We fix that problem - instantly.
+          Discover 50,000+ verified Pakistani businesses with phone numbers, WhatsApp details & addresses. List your business free - no registration required. Get found by thousands of customers daily.
         </p>
 
         {/* Search Bar */}
@@ -87,43 +83,40 @@ export default function HeroSection() {
           </button>
         </form>
 
-        {/* Action Buttons */}
-        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+        {/* Trust Signals - ABOVE FOLD */}
+        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
+          <div className="flex items-center justify-center gap-6 sm:gap-8 text-white text-sm sm:text-base">
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold">50,000+</div>
+              <div className="text-white/70 text-xs sm:text-sm">Businesses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold">100+</div>
+              <div className="text-white/70 text-xs sm:text-sm">Cities</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold">12</div>
+              <div className="text-white/70 text-xs sm:text-sm">Categories</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">150+</div>
+              <div className="text-xs sm:text-sm text-white/80">Cities Covered</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Primary CTAs */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
           <button
             onClick={() => router.push('/add-business')}
-            className="bg-[#60a5fa] hover:bg-blue-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-colors duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            className="bg-[#60a5fa] hover:bg-blue-600 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-xl transition-all duration-200 text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
           >
-            Add Your Business – It's Free
+            🚀 List Your Business FREE
           </button>
           <button
             onClick={() => router.push('/categories')}
-            className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-colors duration-200 text-sm sm:text-base border border-white/20 backdrop-blur-sm hover:border-white/30"
+            className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-xl transition-all duration-200 text-base sm:text-lg border-2 border-white/30 backdrop-blur-sm hover:border-white/50 text-lg"
           >
-            Browse Businesses
+            📂 Browse Categories
           </button>
-        </div>
-
-        {/* Problem-Solution Box */}
-        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
-          <h3 className="text-white font-semibold mb-3 text-base sm:text-lg">🎯 The Real Problem We Solve</h3>
-          <p className="text-white/90 mb-4 text-sm sm:text-base">
-            80% of Pakistani businesses never get listed online because of complicated forms and registration requirements. 
-            Your business deserves better than that.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => router.push('/add-business')}
-              className="bg-[#60a5fa] hover:bg-blue-600 text-white font-medium px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-colors text-sm"
-            >
-              🚀 Fix My Visibility Now
-            </button>
-            <button
-              onClick={() => router.push('/blog/how-to-add-business')}
-              className="bg-white/20 hover:bg-white/30 text-white font-medium px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-colors text-sm"
-            >
-              📖 Learn How It Works
-            </button>
-          </div>
         </div>
 
         {/* Additional Links */}
@@ -142,16 +135,13 @@ export default function HeroSection() {
             📝 How to Add Business Free
           </Link>
           <span className="text-white/30">•</span>
-          <Link
-            href="/developer"
-            className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
-          >
-            👨‍💻 Developer Notes
+          <Link href="/contact" className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors">
+            Contact Support
           </Link>
         </div>
 
         <p className="mt-4 sm:mt-6 text-white/40 text-xs sm:text-sm">
-          Popular: Restaurants, Real Estate, Healthcare, Technology
+          🏆 Pakistan's #1 Free Business Directory | ✓ Verified Listings | ✓ No Registration Required | ✓ Instant Approval
         </p>
       </div>
     </section>
