@@ -7,7 +7,6 @@ import LatestBusinesses from '@/components/home/latest-businesses'
 import CategoriesGrid from '@/components/home/categories-grid'
 import CitiesGrid from '@/components/home/cities-grid'
 import CTASection from '@/components/home/cta-section'
-import { BreadcrumbSchema, DirectorySchema } from '@/components/seo/breadcrumb-schema'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -19,8 +18,6 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <BreadcrumbSchema pathname="/" />
-      <DirectorySchema />
       <Navbar />
       <main id="main-content">
         <HeroSection />

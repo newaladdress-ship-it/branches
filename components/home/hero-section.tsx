@@ -35,9 +35,9 @@ export default function HeroSection() {
 
         <h1
           id="hero-heading"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6"
         >
-          Pakistan Business Directory - Find & List Local Businesses Free
+          Pakistan's #1 Business Directory
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto">
           Discover 50,000+ verified Pakistani businesses with phone numbers, WhatsApp details & addresses. List your business free - no registration required. Get found by thousands of customers daily.
@@ -84,19 +84,17 @@ export default function HeroSection() {
         </form>
 
         {/* Trust Signals - ABOVE FOLD */}
-        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
-          <div className="flex items-center justify-center gap-6 sm:gap-8 text-white text-sm sm:text-base">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold">50,000+</div>
-              <div className="text-white/70 text-xs sm:text-sm">Businesses</div>
+        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-3xl mx-auto border border-white/20">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">50,000+</div>
+              <div className="text-xs sm:text-sm text-white/80">Daily Visitors</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold">100+</div>
-              <div className="text-white/70 text-xs sm:text-sm">Cities</div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">12,450+</div>
+              <div className="text-xs sm:text-sm text-white/80">Business Listed</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold">12</div>
-              <div className="text-white/70 text-xs sm:text-sm">Categories</div>
+            <div>
               <div className="text-2xl sm:text-3xl font-bold text-white">150+</div>
               <div className="text-xs sm:text-sm text-white/80">Cities Covered</div>
             </div>
