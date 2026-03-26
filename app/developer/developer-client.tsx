@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Code, Database, Globe, Server, Smartphone, Zap, Shield, Cpu, Cloud, GitBranch, Terminal, Package } from 'lucide-react'
+import { Code, Database, Globe, Server, Smartphone, Zap, Shield, Cpu, Cloud, GitBranch, Terminal, Package, Mail } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 
@@ -9,12 +9,12 @@ export default function DeveloperClient() {
   const [activeTab, setActiveTab] = useState('architecture')
 
   const techStack = [
-    { name: 'Next.js 14', icon: Globe, color: 'text-gray-800', description: 'React framework with App Router' },
-    { name: 'TypeScript', icon: Code, color: 'text-blue-600', description: 'Type-safe JavaScript' },
-    { name: 'Tailwind CSS', icon: Smartphone, color: 'text-cyan-600', description: 'Utility-first CSS framework' },
-    { name: 'Firebase', icon: Database, color: 'text-orange-600', description: 'Backend-as-a-Service' },
-    { name: 'Vercel', icon: Cloud, color: 'text-gray-900', description: 'Deployment platform' },
-    { name: 'Lucide React', icon: Zap, color: 'text-purple-600', description: 'Icon library' }
+    { name: 'Next.js 14', icon: Globe, color: 'text-gray-800', description: 'React framework with App Router', url: 'https://nextjs.org/docs' },
+    { name: 'TypeScript', icon: Code, color: 'text-blue-600', description: 'Type-safe JavaScript', url: 'https://www.typescriptlang.org/docs' },
+    { name: 'Tailwind CSS', icon: Smartphone, color: 'text-cyan-600', description: 'Utility-first CSS framework', url: 'https://tailwindcss.com/docs' },
+    { name: 'Firebase', icon: Database, color: 'text-orange-600', description: 'Backend-as-a-Service', url: 'https://firebase.google.com/docs' },
+    { name: 'Vercel', icon: Cloud, color: 'text-gray-900', description: 'Deployment platform', url: 'https://vercel.com/docs' },
+    { name: 'Lucide React', icon: Zap, color: 'text-purple-600', description: 'Icon library', url: 'https://lucide.dev/docs' }
   ]
 
   const features = [
@@ -189,11 +189,17 @@ export default function DeveloperClient() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {techStack.map((tech, index) => (
-                  <div key={index} className="text-center p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-shadow">
+                  <a 
+                    key={index} 
+                    href={tech.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-center p-6 border border-gray-200 rounded-xl hover:shadow-lg transition-shadow block"
+                  >
                     <tech.icon className={`w-12 h-12 mx-auto mb-4 ${tech.color}`} />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{tech.name}</h3>
                     <p className="text-gray-600 text-sm">{tech.description}</p>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
@@ -263,6 +269,44 @@ export default function DeveloperClient() {
                       <div className="mb-2">await sendBusinessSubmissionEmail(businessData)</div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <Globe className="w-6 h-6 text-blue-600" />
+                  Quick Links
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <a href="/categories" className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <Globe className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <h4 className="font-medium text-gray-900">Browse Categories</h4>
+                      <p className="text-sm text-gray-600">View all business categories</p>
+                    </div>
+                  </a>
+                  <a href="/add-business" className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <Package className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-medium text-gray-900">Add Business</h4>
+                      <p className="text-sm text-gray-600">Submit new business listing</p>
+                    </div>
+                  </a>
+                  <a href="/contact" className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <Mail className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <h4 className="font-medium text-gray-900">Contact Support</h4>
+                      <p className="text-sm text-gray-600">Get help and support</p>
+                    </div>
+                  </a>
+                  <a href="/priority" className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <Zap className="w-5 h-5 text-yellow-600" />
+                    <div>
+                      <h4 className="font-medium text-gray-900">Priority Listing</h4>
+                      <p className="text-sm text-gray-600">Get premium visibility</p>
+                    </div>
+                  </a>
                 </div>
               </div>
 
