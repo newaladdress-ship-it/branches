@@ -115,12 +115,12 @@ export default function AddBusinessClient() {
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required'
-    } else if (!/^(\+92|0)?[3-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Please enter a valid Pakistani phone number'
+    } else if (!/^(\+92|0)?[0-9]{2,4}[ -]?[0-9]{3,4}[ -]?[0-9]{3,4}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = 'Please enter a valid Pakistani phone number (e.g., 021 111 331 331)'
     }
 
-    if (formData.whatsapp && !/^(\+92|0)?[3-9]\d{9}$/.test(formData.whatsapp.replace(/\s/g, ''))) {
-      newErrors.whatsapp = 'Please enter a valid Pakistani WhatsApp number'
+    if (formData.whatsapp && !/^(\+92|0)?[0-9]{2,4}[ -]?[0-9]{3,4}[ -]?[0-9]{3,4}$/.test(formData.whatsapp.replace(/\s/g, ''))) {
+      newErrors.whatsapp = 'Please enter a valid Pakistani WhatsApp number (e.g., 021 111 331 331)'
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -452,7 +452,7 @@ export default function AddBusinessClient() {
                     className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                       errors.phone ? 'border-red-500' : 'border-slate-300'
                     }`}
-                    placeholder="+92 300 1234567"
+                    placeholder="021 111 331 331"
                   />
                   {errors.phone && (
                     <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
@@ -471,7 +471,7 @@ export default function AddBusinessClient() {
                     className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                       errors.whatsapp ? 'border-red-500' : 'border-slate-300'
                     }`}
-                    placeholder="+92 300 1234567 (optional)"
+                    placeholder="021 111 331 331 (optional)"
                   />
                   {errors.whatsapp && (
                     <p className="mt-1 text-sm text-red-600">{errors.whatsapp}</p>
