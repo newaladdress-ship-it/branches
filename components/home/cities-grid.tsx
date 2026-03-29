@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { CITIES } from '@/lib/data'
+import { ArrowRight } from 'lucide-react'
 
 const cityImages: Record<string, string> = {
   Karachi: 'from-blue-500 to-blue-700',
@@ -16,7 +17,7 @@ const cityImages: Record<string, string> = {
   Bahawalpur: 'from-pink-500 to-pink-700',
 }
 
-const featuredCities = CITIES.slice(0, 12)
+const featuredCities = CITIES.slice(0, 20)
 
 export default function CitiesGrid() {
   return (
@@ -31,7 +32,7 @@ export default function CitiesGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
           {featuredCities.map((city) => (
             <Link
               key={city}
@@ -41,6 +42,20 @@ export default function CitiesGrid() {
               <span className="font-semibold text-sm">{city}</span>
             </Link>
           ))}
+        </div>
+
+        {/* View All Cities Button */}
+        <div className="text-center">
+          <Link
+            href="/cities"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#0f2b3d] hover:bg-[#1a3f57] text-white font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-105"
+          >
+            View All Cities
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <p className="mt-3 text-sm text-gray-500">
+            Explore {CITIES.length}+ cities across Pakistan
+          </p>
         </div>
       </div>
     </section>
