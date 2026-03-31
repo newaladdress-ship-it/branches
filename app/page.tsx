@@ -13,6 +13,18 @@ export const metadata: Metadata = {
   title: 'Pakistan Business Directory | Find Local Businesses',
   description:
     'Search Pakistan businesses by category and city. Compare phone numbers, locations, and services. List your business for free on PakBizBranches.',
+  alternates: {
+    canonical: 'https://pakbizbranhces.online/',
+  },
+  openGraph: {
+    title: 'Pakistan Business Directory | Find Local Businesses',
+    description:
+      'Search Pakistan businesses by category and city. Compare phone numbers, locations, and services. List your business for free on PakBizBranches.',
+    url: 'https://pakbizbranhces.online/',
+    siteName: 'PakBizBranches',
+    locale: 'en_PK',
+    type: 'website',
+  },
 }
 
 export default function HomePage() {
