@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 export const metadata: Metadata = {
-  title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Listings',
-  description: 'Find verified Pakistani businesses by city & category. Get phone numbers, WhatsApp details & addresses. List your business free - no registration required. Instant approval.',
-  keywords: 'Pakistan business directory, free business listing Pakistan, Pakistani business directory, local businesses Pakistan, add business free Pakistan, business contact details Pakistan, WhatsApp business directory Pakistan, verified local services Pakistan, companies directory Pakistan, find businesses Pakistan, Pakistan business search, Pakistani companies directory',
+  title: 'Pakistan Business Directory | Find Local Services Fast',
+  description:
+    'Find top businesses in Pakistan by city and category. Get verified phone numbers, addresses, and service details. List your business for free.',
+  keywords:
+    'Pakistan business directory, find businesses near you Pakistan, best local services Pakistan, free business listing Pakistan, city business listings Pakistan',
   authors: [{ name: 'PakBizBranches', url: 'https://pakbizbranhces.online' }],
   metadataBase: new URL('https://pakbizbranhces.online'),
   icons: {
@@ -17,8 +19,9 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Daily Users',
-    description: 'Pakistan\'s #1 free business directory with 12,450+ listings. Add your business free without registration. Get phone numbers and verified listings.',
+    title: 'Pakistan Business Directory | Find Local Services Fast',
+    description:
+      'Find top businesses in Pakistan by city and category. Compare listings and contact local services quickly.',
     url: 'https://pakbizbranhces.online',
     siteName: 'PakBizBranches',
     locale: 'en_PK',
@@ -26,8 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PakBizBranches – Pakistan Free Business Directory | 50,000+ Daily Users',
-    description: 'Pakistan\'s #1 free business directory with 12,450+ listings. Add your business free without registration.',
+    title: 'Pakistan Business Directory | Find Local Services Fast',
+    description:
+      'Find top businesses in Pakistan by city and category. List your business for free and get discovered.',
   },
   robots: {
     index: true,

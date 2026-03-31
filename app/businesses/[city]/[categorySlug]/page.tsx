@@ -9,6 +9,7 @@ import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCityCategoryContent } from '@/lib/seo-content'
 import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
+import { getCategoryKeywordCluster, getCityKeywordCluster } from '@/lib/organic-keywords'
 
 const BASE_URL = 'https://pakbizbranhces.online'
 
@@ -36,14 +37,23 @@ export async function generateMetadata(props: { params: Promise<{ city: string; 
   const category = CATEGORIES.find(c => c.id === params.categorySlug)
   if (!cityName || !category) return { title: 'Not Found | PakBizBranches' }
 
-  const title = `Best ${category.name} in ${cityName} | PakBizBranches`
-  const description = `Explore trusted ${category.name.toLowerCase()} in ${cityName} with contact details, maps, and local business listings.`
+  const title = `Top ${category.name} in ${cityName} | Verified Local Listings`
+  const description = `Find the best ${category.name.toLowerCase()} in ${cityName} with direct phone numbers, local addresses, and trusted business listings.`
   const url = `${BASE_URL}/locations/${params.city}/${params.categorySlug}`
+  const keywordCluster = [
+    ...getCategoryKeywordCluster(params.categorySlug),
+    ...getCityKeywordCluster(cityName),
+  ]
 
   return {
     title,
     description,
-    keywords: `${category.name} ${cityName}, ${cityName} ${category.name.toLowerCase()}, ${category.name.toLowerCase()} Pakistan, ${cityName} businesses, ${cityName} directory`,
+    keywords: [
+      `${category.name} ${cityName}`,
+      `best ${category.name.toLowerCase()} in ${cityName}`,
+      `${cityName} ${category.name.toLowerCase()} businesses`,
+      ...keywordCluster.slice(0, 8),
+    ],
     alternates: { canonical: url },
     openGraph: {
       title,
@@ -108,6 +118,34 @@ export default async function CityCategoryPage(props: { params: Promise<{ city: 
     })),
   } : null
 
+  const faqItems = [
+    {
+      q: `What are the best ${category.name.toLowerCase()} in ${cityName}?`,
+      a: `You can compare top ${category.name.toLowerCase()} listings in ${cityName} by phone number, location, and service details on this page.`,
+    },
+    {
+      q: `How can I contact ${category.name.toLowerCase()} businesses in ${cityName}?`,
+      a: 'Open any listing to find direct phone, WhatsApp, address, and business profile details.',
+    },
+    {
+      q: `Can I add my business to this ${cityName} list?`,
+      a: 'Yes. Submit your listing for free to appear in relevant category and city pages.',
+    },
+  ]
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  }
+
   return (
     <>
       <Navbar />
@@ -115,6 +153,7 @@ export default async function CityCategoryPage(props: { params: Promise<{ city: 
       {itemListSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main className="bg-[#f8fafc] min-h-screen">
         {/* Hero */}
         <section className="bg-gradient-to-br from-[#0f2b3d] to-[#1a3f57] py-16">
@@ -252,6 +291,18 @@ export default async function CityCategoryPage(props: { params: Promise<{ city: 
               <Link href={`/categories/${params.categorySlug}`} className="text-[#60a5fa] hover:underline" title={`${category.name} in Pakistan`}>All {category.name}</Link>
               <Link href="/add-business" className="text-[#60a5fa] hover:underline" title="Add Business Free">Add Business Free</Link>
               <Link href="/blog" className="text-[#60a5fa] hover:underline" title="Business Blog">Business Blog</Link>
+            </div>
+          </section>
+
+          <section className="mt-8 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <h2 className="text-2xl font-bold text-[#0f2b3d] mb-4">FAQs for {category.name} in {cityName}</h2>
+            <div className="space-y-4">
+              {faqItems.map((item) => (
+                <div key={item.q}>
+                  <h3 className="font-semibold text-gray-900">{item.q}</h3>
+                  <p className="text-gray-600 mt-1">{item.a}</p>
+                </div>
+              ))}
             </div>
           </section>
         </div>

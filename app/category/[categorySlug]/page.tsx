@@ -9,6 +9,7 @@ import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCategoryContent } from '@/lib/seo-content'
 import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
+import { getCategoryKeywordCluster } from '@/lib/organic-keywords'
 
 const BASE_URL = 'https://pakbizbranhces.online'
 
@@ -32,14 +33,20 @@ export async function generateMetadata(props: { params: Promise<{ categorySlug: 
   const category = CATEGORIES.find(c => c.id === params.categorySlug)
   if (!category) return { title: 'Category Not Found | PakBizBranches' }
 
-  const title = `Top ${category.name} in Pakistan | PakBizBranches`
-  const description = `Find trusted ${category.name.toLowerCase()} businesses in Pakistan with contacts, locations, and real listings.`
+  const title = `Best ${category.name} in Pakistan | Local Listings`
+  const description = `Discover top ${category.name.toLowerCase()} in Pakistan with phone numbers, addresses, and verified local business listings.`
   const url = `${BASE_URL}/categories/${params.categorySlug}`
+  const keywordCluster = getCategoryKeywordCluster(params.categorySlug)
 
   return {
     title,
     description,
-    keywords: `${category.name} Pakistan, ${category.name.toLowerCase()} Pakistan, Pakistan ${category.name.toLowerCase()}, ${category.name} directory, ${category.name} businesses Pakistan`,
+    keywords: [
+      `${category.name} Pakistan`,
+      `${category.name.toLowerCase()} businesses Pakistan`,
+      `best ${category.name.toLowerCase()} in Pakistan`,
+      ...keywordCluster,
+    ],
     alternates: { canonical: url },
     openGraph: {
       title,
@@ -106,6 +113,34 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
     })),
   } : null
 
+  const faqItems = [
+    {
+      q: `How do I find the best ${category.name} in Pakistan?`,
+      a: `Compare listed ${category.name.toLowerCase()} businesses by city, contact details, and service information on PakBizBranches.`,
+    },
+    {
+      q: `Can I list my ${category.name.toLowerCase()} business for free?`,
+      a: 'Yes, you can submit your business listing for free and appear in category and city pages.',
+    },
+    {
+      q: `Do these listings include phone numbers and locations?`,
+      a: 'Yes, most listings include direct phone numbers, city, and address details to help users contact businesses quickly.',
+    },
+  ]
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  }
+
   return (
     <>
       <Navbar />
@@ -113,6 +148,7 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
       {itemListSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main className="bg-[#f8fafc] min-h-screen">
         {/* Hero */}
         <section className="bg-gradient-to-br from-[#0f2b3d] to-[#1a3f57] py-16">
@@ -231,6 +267,18 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
               <Link href="/categories" className="text-[#60a5fa] hover:underline" title="Browse Categories">All Categories</Link>
               <Link href="/add-business" className="text-[#60a5fa] hover:underline" title="Add Your Business Free">Add Business Free</Link>
               <Link href="/blog" className="text-[#60a5fa] hover:underline" title="Business Blog">Business Guides</Link>
+            </div>
+          </section>
+
+          <section className="mt-8 bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <h2 className="text-2xl font-bold text-[#0f2b3d] mb-4">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {faqItems.map((item) => (
+                <div key={item.q}>
+                  <h3 className="font-semibold text-gray-900">{item.q}</h3>
+                  <p className="text-gray-600 mt-1">{item.a}</p>
+                </div>
+              ))}
             </div>
           </section>
         </div>

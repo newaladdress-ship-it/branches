@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCityContent } from '@/lib/seo-content'
+import { getCityKeywordCluster } from '@/lib/organic-keywords'
 
 const BASE_URL = 'https://pakbizbranhces.online'
 
@@ -39,14 +40,20 @@ export async function generateMetadata(props: { params: Promise<{ city: string }
   const cityName = findCityBySlug(params.city)
   if (!cityName) return { title: 'City Not Found | PakBizBranches' }
 
-  const title = `${cityName} Businesses – Pakistan Directory`
-  const description = `Find local businesses in ${cityName}, Pakistan. Search restaurants, shops, services, and more. Free directory with phone numbers and contact details.`
+  const title = `Best Businesses in ${cityName} | Local Business Directory`
+  const description = `Discover top local businesses in ${cityName} with phone numbers, category filters, and verified contact details.`
   const url = `${BASE_URL}/cities/${params.city}`
+  const keywordCluster = getCityKeywordCluster(cityName)
 
   return {
     title,
     description,
-    keywords: `${cityName} businesses, ${cityName} Pakistan, local businesses ${cityName}, business directory ${cityName}, find businesses ${cityName} Pakistan`,
+    keywords: [
+      `${cityName} businesses`,
+      `business directory ${cityName}`,
+      `best businesses in ${cityName}`,
+      ...keywordCluster,
+    ],
     alternates: { canonical: url },
     openGraph: {
       title,
