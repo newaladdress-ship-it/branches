@@ -11,6 +11,7 @@ import { CATEGORIES } from '@/lib/data'
 import { db } from '@/lib/firebase'
 import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore'
 import { sendBusinessSubmissionEmail } from '@/lib/email-service'
+import { normalizeCategoryForStorage } from '@/lib/category-mappings'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -216,8 +217,20 @@ export default function AddBussinessClient() {
     try {
       const businessData = {
         ...formData,
+        businessName: formData.businessName.trim(),
+        description: formData.description.trim(),
+        phone: formData.phone.trim(),
+        whatsapp: formData.whatsapp.trim(),
+        email: formData.email.trim().toLowerCase(),
+        websiteUrl: formData.website.trim(),
+        address: formData.address.trim(),
+        city: formData.city.trim(),
+        category: normalizeCategoryForStorage(formData.category),
+        categoryId: normalizeCategoryForStorage(formData.category),
+        categorySlug: normalizeCategoryForStorage(formData.category),
+        subCategory: formData.subcategory.trim(),
         slug: generateSlug(formData.businessName, formData.city),
-        status: 'pending',
+        status: 'approved',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       }

@@ -1,17 +1,20 @@
 User-agent: *
 Allow: /
 
+# Block unnecessary crawlers
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
 # Block admin and private areas
 Disallow: /api/
-Disallow: /_next/
 Disallow: /admin/
 Disallow: /.well-known/
-
-# Allow CSS and JS files for proper rendering
-Allow: /css/
-Allow: /js/
-Allow: /*.css
-Allow: /*.js
 
 # Allow all public pages
 Allow: /categories
@@ -21,12 +24,6 @@ Allow: /blog
 Allow: /about
 Allow: /contact
 Allow: /add-business
-Allow: /best-restaurants
-Allow: /top-real-estate
-Allow: /healthcare-services
-Allow: /categories/restaurants
-Allow: /categories/real-estate
-Allow: /categories/healthcare
-
+Allow: /developer
 # Sitemap location
 Sitemap: https://pakbizbranhces.online/sitemap.xml

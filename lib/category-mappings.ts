@@ -15,6 +15,8 @@ export const CATEGORY_MAPPINGS = {
   'logistics': ['logistics', 'transport', 'transportation', 'shipping', 'delivery'],
 }
 
+export const LIVE_STATUSES = new Set(['approved', 'pending'])
+
 // Function to get the main category ID from any category name
 export function getCategoryIdFromName(categoryName: string): string | null {
   if (!categoryName) return null
@@ -40,4 +42,14 @@ export function isBusinessInCategory(businessCategory: string, targetCategoryId:
   
   const businessCategoryId = getCategoryIdFromName(businessCategory)
   return businessCategoryId === targetCategoryId
+}
+
+export function getPossibleCategoryValues(categoryId: string): string[] {
+  const mapped = CATEGORY_MAPPINGS[categoryId as keyof typeof CATEGORY_MAPPINGS] ?? []
+  return Array.from(new Set([categoryId, ...mapped]))
+}
+
+export function normalizeCategoryForStorage(categoryValue: string): string {
+  const matched = getCategoryIdFromName(categoryValue)
+  return matched ?? categoryValue.toLowerCase().trim()
 }

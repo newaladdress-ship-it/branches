@@ -30,17 +30,21 @@ export default function HeroSection() {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="inline-flex items-center gap-2 text-[#60a5fa] font-semibold text-sm mb-4 tracking-wide uppercase">
-          Pakistan Business Directory
+          <span className="w-4 h-px bg-[#60a5fa]" />
+          Pakistan's #1
+          <span className="w-4 h-px bg-[#60a5fa]" />
+          Business Directory
+          <span className="w-4 h-px bg-[#60a5fa]" />
         </p>
 
         <h1
           id="hero-heading"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4"
         >
-          Pakistan's #1 Business Directory
+          Find Trusted Businesses in Pakistan by City and Category
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto">
-          Discover 50,000+ verified Pakistani businesses with phone numbers, WhatsApp details & addresses. List your business free - no registration required. Get found by thousands of customers daily.
+          PakBizBranches helps people discover verified local businesses fast, and helps owners get found with a free business listing.
         </p>
 
         {/* Search Bar */}
@@ -83,38 +87,31 @@ export default function HeroSection() {
           </button>
         </form>
 
-        {/* Trust Signals - ABOVE FOLD */}
-        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-3xl mx-auto border border-white/20">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">50,000+</div>
-              <div className="text-xs sm:text-sm text-white/80">Daily Visitors</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">12,450+</div>
-              <div className="text-xs sm:text-sm text-white/80">Business Listed</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">150+</div>
-              <div className="text-xs sm:text-sm text-white/80">Cities Covered</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Primary CTAs */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+        {/* Action Buttons */}
+        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <button
             onClick={() => router.push('/add-business')}
-            className="bg-[#60a5fa] hover:bg-blue-600 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-xl transition-all duration-200 text-base sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
+            className="bg-[#60a5fa] hover:bg-blue-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-colors duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
-            🚀 List Your Business FREE
+            List Your Business for Free
           </button>
           <button
             onClick={() => router.push('/categories')}
-            className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-xl transition-all duration-200 text-base sm:text-lg border-2 border-white/30 backdrop-blur-sm hover:border-white/50 text-lg"
+            className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-colors duration-200 text-sm sm:text-base border border-white/20 backdrop-blur-sm hover:border-white/30"
           >
-            📂 Browse Categories
+            Browse Categories
           </button>
+        </div>
+
+        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
+          <p className="text-white/90 text-sm sm:text-base">
+            Pakistan business directory with city pages, category pages, and direct contact details to help users quickly compare local services.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-white/85">
+            <span className="bg-white/10 px-3 py-1 rounded-full">50,000+ Listings</span>
+            <span className="bg-white/10 px-3 py-1 rounded-full">150+ Cities</span>
+            <span className="bg-white/10 px-3 py-1 rounded-full">12 Main Categories</span>
+          </div>
         </div>
 
         {/* Additional Links */}
@@ -133,13 +130,16 @@ export default function HeroSection() {
             📝 How to Add Business Free
           </Link>
           <span className="text-white/30">•</span>
-          <Link href="/contact" className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors">
-            Contact Support
+          <Link
+            href="/developer"
+            className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
+          >
+            👨‍💻 Developer Notes
           </Link>
         </div>
 
         <p className="mt-4 sm:mt-6 text-white/40 text-xs sm:text-sm">
-          🏆 Pakistan's #1 Free Business Directory | ✓ Verified Listings | ✓ No Registration Required | ✓ Instant Approval
+          Popular: Restaurants, Real Estate, Healthcare, Technology
         </p>
       </div>
     </section>
