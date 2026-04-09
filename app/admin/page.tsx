@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Search, Edit2, Trash2, Eye, Users, Building2, Mail, Phone, Shield, LogOut, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
-import { signOut, onAuthStateChanged } from 'firebase/auth'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import AdminLogin from '@/components/admin-login'
-import { db, auth } from '@/lib/firebase'
+import { db } from '@/lib/firebase'
 import { collection, query, orderBy, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore'
 
 interface Business {
@@ -56,31 +55,18 @@ export default function AdminPage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
 
   useEffect(() => {
-    // Check Firebase authentication state
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Check if user is admin
-        const adminEmails = [
-          'admin@pakbizbranches.online',
-          'support@pakbizbranches.online',
-        ]
-        
-        if (adminEmails.includes(user.email!)) {
-          setIsAuthenticated(true)
-          setCurrentUser(user)
-          fetchData()
-        } else {
-          // User is not admin, sign them out
-          signOut(auth)
-          setIsAuthenticated(false)
-        }
-      } else {
-        setIsAuthenticated(false)
-        setCurrentUser(null)
-      }
-    })
-
-    return () => unsubscribe()
+    // Check localStorage authentication
+    const isAuthenticated = localStorage.getItem('admin_authenticated') === 'true'
+    const adminEmail = localStorage.getItem('admin_email')
+    
+    if (isAuthenticated && adminEmail) {
+      setIsAuthenticated(true)
+      setCurrentUser({ email: adminEmail })
+      fetchData()
+    } else {
+      setIsAuthenticated(false)
+      setCurrentUser(null)
+    }
   }, [])
 
   async function fetchData() {
@@ -126,15 +112,11 @@ export default function AdminPage() {
   }
 
   async function handleLogout() {
-    try {
-      await signOut(auth)
-      localStorage.removeItem('admin_authenticated')
-      localStorage.removeItem('admin_email')
-      setIsAuthenticated(false)
-      setCurrentUser(null)
-    } catch (error) {
-      console.error('Logout error:', error)
-    }
+    localStorage.removeItem('admin_authenticated')
+    localStorage.removeItem('admin_email')
+    setIsAuthenticated(false)
+    setCurrentUser(null)
+    router.push('/')
   }
 
   async function handleDeleteBusiness(businessId: string) {
