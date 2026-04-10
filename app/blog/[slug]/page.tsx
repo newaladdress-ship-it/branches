@@ -151,14 +151,48 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
             </div>
           </div>
 
-          {/* Back to Blog */}
-          <div className="mt-8 text-center">
+          {/* Call to Action - Homepage Link */}
+          <div className="mt-12 bg-gradient-to-r from-[#0f2b3d] to-[#1a3f57] rounded-2xl p-8 md:p-12 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">Ready to Grow Your Business?</h3>
+            <p className="text-white/80 mb-8 text-lg">Join thousands of businesses already listed on PakBizBranches. Get discovered by local customers searching for your services.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/add-business"
+                className="px-8 py-3 bg-[#60a5fa] text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors shadow-lg"
+              >
+                Add Your Business Free
+              </Link>
+              <Link
+                href="/"
+                className="px-8 py-3 bg-white/10 text-white border border-white/30 rounded-lg font-semibold hover:bg-white/20 transition-colors"
+              >
+                Back to Homepage
+              </Link>
+            </div>
+          </div>
+
+          {/* Navigation Footer */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700 shadow-sm"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Blog
+            </Link>
+            <span className="text-gray-400 hidden sm:block">•</span>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-6 py-3 text-[#60a5fa] font-medium hover:underline"
+            >
+              Home
+            </Link>
+            <span className="text-gray-400 hidden sm:block">•</span>
+            <Link
+              href="/categories"
+              className="inline-flex items-center gap-2 px-6 py-3 text-[#60a5fa] font-medium hover:underline"
+            >
+              Browse Businesses
             </Link>
           </div>
         </article>

@@ -37,9 +37,23 @@ export default function BlogPage() {
             <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
               Business Tips & Guides
             </h1>
-            <p className="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-8">
               Expert advice, tips, and guides to help your business grow and succeed in Pakistan
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/"
+                className="px-6 py-2 bg-[#60a5fa] text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors inline-flex items-center justify-center gap-2"
+              >
+                Back to Homepage
+              </Link>
+              <Link
+                href="/add-business"
+                className="px-6 py-2 bg-white/10 text-white border border-white/30 rounded-lg font-semibold hover:bg-white/20 transition-colors inline-flex items-center justify-center"
+              >
+                List Your Business
+              </Link>
+            </div>
           </div>
         </section>
 

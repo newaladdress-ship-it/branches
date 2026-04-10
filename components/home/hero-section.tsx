@@ -21,7 +21,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative bg-[#0f2b3d] overflow-hidden py-12 md:py-20"
+      className="relative bg-[#0f2b3d] overflow-hidden py-16 md:py-28"
       aria-labelledby="hero-heading"
     >
       {/* Decorative circles */}
@@ -39,12 +39,12 @@ export default function HeroSection() {
 
         <h1
           id="hero-heading"
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-white leading-tight mb-3"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4"
         >
-          Find Local Businesses in Pakistan
+          Find Trusted Businesses in Pakistan by City and Category
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-white/90 mb-6 leading-relaxed max-w-2xl mx-auto">
-          Discover verified businesses by city and category
+        <p className="text-base sm:text-lg md:text-xl text-white/90 mb-8 leading-relaxed max-w-2xl sm:max-w-3xl mx-auto">
+          PakBizBranches helps people discover verified local businesses fast, and helps owners get found with a free business listing.
         </p>
 
         {/* Search Bar */}
@@ -103,7 +103,44 @@ export default function HeroSection() {
           </button>
         </div>
 
+        <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-xl p-4 sm:p-6 max-w-2xl mx-auto border border-white/20">
+          <p className="text-white/90 text-sm sm:text-base">
+            Pakistan business directory with city pages, category pages, and direct contact details to help users quickly compare local services.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-white/85">
+            <span className="bg-white/10 px-3 py-1 rounded-full">50,000+ Listings</span>
+            <span className="bg-white/10 px-3 py-1 rounded-full">150+ Cities</span>
+            <span className="bg-white/10 px-3 py-1 rounded-full">12 Main Categories</span>
+          </div>
+        </div>
 
+        {/* Additional Links */}
+        <div className="mt-4 sm:mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          <Link
+            href="/blog"
+            className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
+          >
+            📚 Business Guide
+          </Link>
+          <span className="text-white/30">•</span>
+          <Link
+            href="/blog/how-to-add-business"
+            className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
+          >
+            📝 How to Add Business Free
+          </Link>
+          <span className="text-white/30">•</span>
+          <Link
+            href="/developer"
+            className="text-white/60 hover:text-white text-xs sm:text-sm transition-colors"
+          >
+            👨‍💻 Developer Notes
+          </Link>
+        </div>
+
+        <p className="mt-4 sm:mt-6 text-white/40 text-xs sm:text-sm">
+          Popular: Restaurants, Real Estate, Healthcare, Technology
+        </p>
       </div>
     </section>
   )
