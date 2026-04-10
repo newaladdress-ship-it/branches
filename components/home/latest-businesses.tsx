@@ -47,30 +47,37 @@ export default function LatestBusinesses() {
   useEffect(() => {
     async function fetchLatestBusinesses() {
       try {
+        console.log('[v0] Fetching latest businesses from Firebase...')
         const q = query(
           collection(db, 'businesses'),
           orderBy('createdAt', 'desc'),
           limit(100)
         )
         const querySnapshot = await getDocs(q)
+        console.log('[v0] Fetched total documents:', querySnapshot.size)
+        
         const businessList: Business[] = []
         
         querySnapshot.forEach((doc) => {
+          const data = doc.data()
           const business = {
             id: doc.id,
-            ...doc.data()
+            ...data
           } as Business
           
           // Filter: only include businesses with status "live" or no status
-          const status = String((business as any).status ?? '').toLowerCase()
+          const status = String((data.status ?? '')).toLowerCase().trim()
+          console.log('[v0] Business:', business.businessName, 'Status:', status)
+          
           if (!status || status === 'live') {
             businessList.push(business)
           }
         })
         
+        console.log('[v0] Filtered businesses count:', businessList.length)
         setBusinesses(businessList.slice(0, 8))
       } catch (error) {
-        console.error('Error fetching latest businesses:', error)
+        console.error('[v0] Error fetching latest businesses:', error)
       } finally {
         setLoading(false)
       }
