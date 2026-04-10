@@ -1,6 +1,5 @@
-// Server-side Firebase utilities
+// Server-side Firebase utilities with Timestamp serialization for client components
 // Optimized queries with proper filtering at database level
-// Reduces network payload and improves performance
 
 import { db } from './firebase'
 import {
@@ -11,6 +10,7 @@ import {
   limit,
   getDocs,
   QueryConstraint,
+  Timestamp,
 } from 'firebase/firestore'
 
 export interface Business {
@@ -25,7 +25,7 @@ export interface Business {
   logoUrl?: string
   status: string
   isFeatured?: boolean
-  createdAt: any
+  createdAt: string // ISO string for client serialization
   rating?: number
   reviewCount?: number
   websiteUrl?: string
@@ -34,18 +34,37 @@ export interface Business {
 
 const LIVE_STATUSES = new Set(['approved', 'active', 'live', ''])
 
-// Fetch latest businesses - server-side optimized query
+// Helper: Convert Firestore Timestamp to ISO string
+function serializeTimestamp(timestamp: any): string {
+  if (!timestamp) return new Date().toISOString()
+  
+  if (timestamp instanceof Timestamp) {
+    return timestamp.toDate().toISOString()
+  }
+  
+  if (timestamp.seconds !== undefined) {
+    return new Date(timestamp.seconds * 1000).toISOString()
+  }
+  
+  if (typeof timestamp === 'string') {
+    return timestamp
+  }
+  
+  return new Date().toISOString()
+}
+
+// Fetch latest businesses - simple query without composite index
 export async function fetchLatestBusinesses(count: number = 8): Promise<Business[]> {
   try {
-    const constraints: QueryConstraint[] = [
+    const q = query(
+      collection(db, 'businesses'),
       orderBy('createdAt', 'desc'),
-      limit(count),
-    ]
-
-    const q = query(collection(db, 'businesses'), ...constraints)
+      limit(count * 2) // Fetch more to account for status filtering
+    )
+    
     const snapshot = await getDocs(q)
-
     const businesses: Business[] = []
+    
     snapshot.docs.forEach(doc => {
       const data = doc.data() as any
       const status = String(data.status ?? '').toLowerCase()
@@ -63,7 +82,7 @@ export async function fetchLatestBusinesses(count: number = 8): Promise<Business
           logoUrl: data.logoUrl,
           status: data.status,
           isFeatured: data.isFeatured,
-          createdAt: data.createdAt,
+          createdAt: serializeTimestamp(data.createdAt),
           rating: data.rating,
           reviewCount: data.reviewCount,
           websiteUrl: data.websiteUrl,
@@ -72,31 +91,32 @@ export async function fetchLatestBusinesses(count: number = 8): Promise<Business
       }
     })
 
-    return businesses
+    return businesses.slice(0, count)
   } catch (error) {
     console.error('Error fetching latest businesses:', error)
     return []
   }
 }
 
-// Fetch featured businesses - server-side optimized query
+// Fetch featured businesses - avoid composite index by filtering in JS
 export async function fetchFeaturedBusinesses(count: number = 4): Promise<Business[]> {
   try {
-    const constraints: QueryConstraint[] = [
-      where('isFeatured', '==', true),
+    // Fetch all recent businesses, then filter for featured (avoids composite index)
+    const q = query(
+      collection(db, 'businesses'),
       orderBy('createdAt', 'desc'),
-      limit(count),
-    ]
-
-    const q = query(collection(db, 'businesses'), ...constraints)
+      limit(50) // Fetch more to find featured ones
+    )
+    
     const snapshot = await getDocs(q)
-
     const businesses: Business[] = []
+    
     snapshot.docs.forEach(doc => {
       const data = doc.data() as any
       const status = String(data.status ?? '').toLowerCase()
-
-      if (!status || LIVE_STATUSES.has(status)) {
+      
+      // Filter for featured and live status
+      if ((data.isFeatured === true) && (!status || LIVE_STATUSES.has(status))) {
         businesses.push({
           id: doc.id,
           businessName: data.businessName,
@@ -109,7 +129,7 @@ export async function fetchFeaturedBusinesses(count: number = 4): Promise<Busine
           logoUrl: data.logoUrl,
           status: data.status,
           isFeatured: data.isFeatured,
-          createdAt: data.createdAt,
+          createdAt: serializeTimestamp(data.createdAt),
           rating: data.rating,
           reviewCount: data.reviewCount,
           websiteUrl: data.websiteUrl,
@@ -118,30 +138,29 @@ export async function fetchFeaturedBusinesses(count: number = 4): Promise<Busine
       }
     })
 
-    return businesses
+    return businesses.slice(0, count)
   } catch (error) {
     console.error('Error fetching featured businesses:', error)
     return []
   }
 }
 
-// Fetch businesses by category - server-side optimized query
+// Fetch businesses by category - simple query
 export async function fetchCategoryBusinesses(
   categoryId: string,
   pageLimit: number = 20
 ): Promise<Business[]> {
   try {
-    const constraints: QueryConstraint[] = [
+    const q = query(
+      collection(db, 'businesses'),
       where('categoryId', '==', categoryId),
-      orderBy('isFeatured', 'desc'),
       orderBy('createdAt', 'desc'),
-      limit(pageLimit),
-    ]
+      limit(pageLimit * 2)
+    )
 
-    const q = query(collection(db, 'businesses'), ...constraints)
     const snapshot = await getDocs(q)
-
     const businesses: Business[] = []
+    
     snapshot.docs.forEach(doc => {
       const data = doc.data() as any
       const status = String(data.status ?? '').toLowerCase()
@@ -159,7 +178,7 @@ export async function fetchCategoryBusinesses(
           logoUrl: data.logoUrl,
           status: data.status,
           isFeatured: data.isFeatured,
-          createdAt: data.createdAt,
+          createdAt: serializeTimestamp(data.createdAt),
           rating: data.rating,
           reviewCount: data.reviewCount,
           websiteUrl: data.websiteUrl,
@@ -168,30 +187,29 @@ export async function fetchCategoryBusinesses(
       }
     })
 
-    return businesses
+    return businesses.slice(0, pageLimit)
   } catch (error) {
     console.error('Error fetching category businesses:', error)
     return []
   }
 }
 
-// Fetch businesses by city - server-side optimized query
+// Fetch businesses by city - simple query
 export async function fetchCityBusinesses(
   city: string,
   pageLimit: number = 20
 ): Promise<Business[]> {
   try {
-    const constraints: QueryConstraint[] = [
+    const q = query(
+      collection(db, 'businesses'),
       where('city', '==', city),
-      orderBy('isFeatured', 'desc'),
       orderBy('createdAt', 'desc'),
-      limit(pageLimit),
-    ]
+      limit(pageLimit * 2)
+    )
 
-    const q = query(collection(db, 'businesses'), ...constraints)
     const snapshot = await getDocs(q)
-
     const businesses: Business[] = []
+    
     snapshot.docs.forEach(doc => {
       const data = doc.data() as any
       const status = String(data.status ?? '').toLowerCase()
@@ -209,7 +227,7 @@ export async function fetchCityBusinesses(
           logoUrl: data.logoUrl,
           status: data.status,
           isFeatured: data.isFeatured,
-          createdAt: data.createdAt,
+          createdAt: serializeTimestamp(data.createdAt),
           rating: data.rating,
           reviewCount: data.reviewCount,
           websiteUrl: data.websiteUrl,
@@ -218,7 +236,7 @@ export async function fetchCityBusinesses(
       }
     })
 
-    return businesses
+    return businesses.slice(0, pageLimit)
   } catch (error) {
     console.error('Error fetching city businesses:', error)
     return []
