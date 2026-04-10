@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, Edit2, Trash2, Eye, Users, Building2, Mail, Phone, Shield, LogOut, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Search, Edit2, Trash2, Eye, Users, Building2, Mail, Phone, Shield, LogOut, CheckCircle, XCircle, AlertCircle, Star } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import AdminLogin from '@/components/admin-login'
@@ -29,6 +29,7 @@ interface Business {
   slug?: string
   createdAt: any
   status: string
+  isFeatured?: boolean
 }
 
 interface ContactForm {
@@ -160,6 +161,24 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error updating business:', error)
       alert('Failed to update business')
+    }
+  }
+
+  async function handleToggleFeatured(businessId: string, currentStatus: boolean) {
+    try {
+      const businessRef = doc(db, 'businesses', businessId)
+      await updateDoc(businessRef, {
+        isFeatured: !currentStatus
+      })
+      
+      setBusinesses(prev => prev.map(b => 
+        b.id === businessId ? { ...b, isFeatured: !currentStatus } : b
+      ))
+      
+      alert(`Business ${!currentStatus ? 'marked as featured' : 'removed from featured'}`)
+    } catch (error) {
+      console.error('Error toggling featured status:', error)
+      alert('Failed to toggle featured status')
     }
   }
 
@@ -317,6 +336,7 @@ export default function AdminPage() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
@@ -342,6 +362,20 @@ export default function AdminPage() {
                             }`}>
                               {business.status}
                             </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <button
+                              onClick={() => handleToggleFeatured(business.id, business.isFeatured || false)}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                business.isFeatured
+                                  ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                              }`}
+                              title={business.isFeatured ? 'Click to remove from featured' : 'Click to mark as featured'}
+                            >
+                              <Star className="w-3.5 h-3.5" />
+                              {business.isFeatured ? 'Featured' : 'Not Featured'}
+                            </button>
                           </td>
                           <td className="px-6 py-4 text-sm">
                             <div className="flex items-center gap-2">

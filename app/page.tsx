@@ -4,6 +4,7 @@ import { Metadata } from 'next'
 import HeroSection from '@/components/home/hero-section'
 import AboutSection from '@/components/home/about-section'
 import StatsSection from '@/components/home/stats-section'
+import FeaturedBusinessesSection from '@/components/featured-businesses-section'
 import LatestBusinesses from '@/components/home/latest-businesses'
 import CategoriesGrid from '@/components/home/categories-grid'
 import CitiesGrid from '@/components/home/cities-grid'
@@ -35,6 +36,7 @@ export default function HomePage() {
         <HeroSection />
         <AboutSection />
         <StatsSection />
+        <FeaturedBusinessesSection />
         <LatestBusinesses />
         <CategoriesGrid />
         <CitiesGrid />

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye } from 'lucide-react'
+import { Loader2, AlertCircle, Upload, X, CheckCircle2, Eye, MessageCircle, Zap } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
@@ -331,6 +331,42 @@ export default function AddBussinessClient() {
               </div>
             </div>
           )}
+
+          {/* WhatsApp Premium Promotion */}
+          <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                  Want More Visibility?
+                </h3>
+                <p className="text-slate-700 mb-4">
+                  Mark your business as featured to appear at the top of search results and get significantly more visibility from potential customers!
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://wa.me/923345636230?text=Hi%2C%20I%20want%20to%20promote%20my%20business%20on%20your%20listing%20website.%20Please%20share%20details."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold text-sm hover:shadow-lg hover:scale-105 transition-all duration-200"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Contact via WhatsApp
+                  </a>
+                  <Link
+                    href="/featured-businesses"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border-2 border-green-500 text-green-700 rounded-lg font-semibold text-sm hover:bg-green-50 transition-colors"
+                  >
+                    See Featured Businesses
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Business Information */}

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import AntiCopyWrapper from '@/components/anti-copy-wrapper'
+import FloatingWhatsAppButton from '@/components/floating-whatsapp-button'
 export const metadata: Metadata = {
   title: 'Pakistan Business Directory | Find Local Services Fast',
   description:
@@ -128,7 +130,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased" cz-shortcut-listen="true">{children}</body>
+      <body className="font-sans antialiased" cz-shortcut-listen="true">
+        <AntiCopyWrapper />
+        <FloatingWhatsAppButton />
+        {children}
+      </body>
     </html>
   )
 }

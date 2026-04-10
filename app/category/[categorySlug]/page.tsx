@@ -67,25 +67,54 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
 
   let businesses: Business[] = []
   try {
-    const categoryValues = getPossibleCategoryValues(params.categorySlug).slice(0, 10)
-    const queryVariants = [
-      query(collection(db, 'businesses'), where('categoryId', '==', params.categorySlug), limit(60)),
-      query(collection(db, 'businesses'), where('categorySlug', '==', params.categorySlug), limit(60)),
-      query(collection(db, 'businesses'), where('category', 'in', categoryValues), limit(60)),
-    ]
-    const snapshots = await Promise.all(queryVariants.map(q => getDocs(q)))
+    // Simplified approach: query by categoryId first, then use mapping for backwards compatibility
+    const categoryValues = getPossibleCategoryValues(params.categorySlug).slice(0, 5)
+    
+    // Primary query using standardized categoryId field
+    const primaryQuery = query(
+      collection(db, 'businesses'), 
+      where('categoryId', '==', params.categorySlug), 
+      limit(60)
+    )
+    
+    // Fallback query using category field for backwards compatibility
+    const fallbackQuery = query(
+      collection(db, 'businesses'), 
+      where('category', 'in', categoryValues), 
+      limit(60)
+    )
+    
+    const [primarySnapshot, fallbackSnapshot] = await Promise.all([
+      getDocs(primaryQuery),
+      getDocs(fallbackQuery)
+    ])
+    
     const merged = new Map<string, Business>()
-    snapshots.forEach((snap) => {
-      snap.docs.forEach((doc) => {
+    
+    // Add primary results first
+    primarySnapshot.docs.forEach((doc) => {
+      const business = { id: doc.id, ...doc.data() } as Business
+      const status = String((business as any).status ?? '').toLowerCase()
+      if (!status || LIVE_STATUSES.has(status)) {
+        merged.set(doc.id, business)
+      }
+    })
+    
+    // Add fallback results that aren't already in the map
+    fallbackSnapshot.docs.forEach((doc) => {
+      if (!merged.has(doc.id)) {
         const business = { id: doc.id, ...doc.data() } as Business
         const status = String((business as any).status ?? '').toLowerCase()
         if (!status || LIVE_STATUSES.has(status)) {
           merged.set(doc.id, business)
         }
-      })
+      }
     })
+    
     businesses = Array.from(merged.values()).slice(0, 40)
-  } catch {}
+  } catch (error) {
+    console.error('Error fetching businesses by category:', error)
+  }
 
   const content = generateCategoryContent(params.categorySlug)
   const pageUrl = `${BASE_URL}/categories/${params.categorySlug}`
