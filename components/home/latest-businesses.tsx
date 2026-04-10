@@ -47,12 +47,14 @@ export default function LatestBusinesses() {
   useEffect(() => {
     async function fetchLatestBusinesses() {
       try {
+        console.log('[v0] Starting to fetch latest businesses from Firebase...')
         const q = query(
           collection(db, 'businesses'),
           orderBy('createdAt', 'desc'),
           limit(100)
         )
         const querySnapshot = await getDocs(q)
+        console.log('[v0] Total documents returned from Firebase:', querySnapshot.size)
         
         const businessList: Business[] = []
         
@@ -65,12 +67,15 @@ export default function LatestBusinesses() {
           
           // Filter: only include businesses with status "approved", "pending", or "live"
           const status = String((data.status ?? 'approved')).toLowerCase().trim()
+          console.log('[v0] Business:', business.businessName, '| Status:', status, '| Category:', business.category)
           
           if (status === 'approved' || status === 'pending' || status === 'live') {
             businessList.push(business)
           }
         })
         
+        console.log('[v0] Total filtered businesses:', businessList.length)
+        console.log('[v0] Displaying first 8 businesses')
         setBusinesses(businessList.slice(0, 8))
       } catch (error) {
         console.error('[v0] Error fetching latest businesses:', error)
@@ -106,7 +111,26 @@ export default function LatestBusinesses() {
   }
 
   if (businesses.length === 0) {
-    return null
+    return (
+      <section className="py-16 bg-white" aria-labelledby="latest-businesses-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 id="latest-businesses-heading" className="text-3xl md:text-4xl font-bold text-slate-900 text-balance">
+              Latest Businesses
+            </h2>
+            <p className="mt-3 text-slate-600 text-base sm:text-lg">
+              No businesses available yet. Be the first to list your business!
+            </p>
+            <Link
+              href="/add-business"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl mt-6"
+            >
+              Add Your Business Now
+            </Link>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
