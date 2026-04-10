@@ -95,6 +95,34 @@ export default function AddBussinessClient() {
     }
   }, [formData.category])
 
+  // Load advertisement script
+  useEffect(() => {
+    const loadAds = () => {
+      const script = document.createElement('script')
+      script.async = true
+      script.src = 'https://www.highperformanceformat.com/07e5beba21527d8979cd7e4953709385/invoke.js'
+      
+      // Set atOptions window variable
+      ;(window as any).atOptions = {
+        'key': '07e5beba21527d8979cd7e4953709385',
+        'format': 'iframe',
+        'height': 600,
+        'width': 160,
+        'params': {}
+      }
+      
+      const adContainer = document.getElementById('ad-container')
+      if (adContainer) {
+        adContainer.innerHTML = ''
+        adContainer.appendChild(script)
+      }
+    }
+
+    // Add small delay to ensure DOM is ready
+    const timeoutId = setTimeout(loadAds, 100)
+    return () => clearTimeout(timeoutId)
+  }, [])
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
@@ -271,7 +299,7 @@ export default function AddBussinessClient() {
     <>
       <Navbar />
       <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">
@@ -282,16 +310,20 @@ export default function AddBussinessClient() {
             </p>
           </div>
 
-          {/* Existing Businesses Warning */}
-          {existingBusinesses.length > 0 && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-amber-800 mb-1">Existing Business Found</h3>
-                  <p className="text-amber-700 text-sm">
-                    We found existing businesses with your phone number or email:
-                  </p>
+          {/* Two Column Layout: Form + Ads */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column: Form (2/3 width) */}
+            <div className="lg:col-span-2">
+              {/* Existing Businesses Warning */}
+              {existingBusinesses.length > 0 && (
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-amber-800 mb-1">Existing Business Found</h3>
+                      <p className="text-amber-700 text-sm">
+                        We found existing businesses with your phone number or email:
+                      </p>
                   <ul className="mt-2 text-sm text-amber-700">
                     {existingBusinesses.map((name, index) => (
                       <li key={index}>• {name}</li>
@@ -730,6 +762,23 @@ export default function AddBussinessClient() {
               <p>• Make sure your description is detailed for better visibility</p>
               <p>• Include your WhatsApp number for direct customer contact</p>
               <p>• For support, email us at support@pakbizbranhces.online</p>
+            </div>
+          </div>
+            </div>
+
+            {/* Right Column: Advertisement Space (1/3 width) */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8 space-y-4">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                  <p className="text-xs text-slate-500 font-semibold uppercase mb-4">Sponsored</p>
+                  <div id="ad-container">
+                    {/* Ads will load here */}
+                    <div className="bg-slate-100 rounded-lg h-[600px] flex items-center justify-center">
+                      <p className="text-slate-500 text-sm">Loading advertisements...</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
