@@ -12,6 +12,7 @@ import {
   QueryConstraint,
   Timestamp,
 } from 'firebase/firestore'
+import { LIVE_STATUSES } from './category-mappings'
 
 export interface Business {
   id: string
@@ -31,8 +32,6 @@ export interface Business {
   websiteUrl?: string
   facebookPage?: string
 }
-
-const LIVE_STATUSES = new Set(['approved', 'active', 'live', ''])
 
 // Helper: Convert Firestore Timestamp to ISO string
 function serializeTimestamp(timestamp: any): string {
