@@ -68,7 +68,7 @@ export default function BlogPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {BLOG_POSTS.map((post, index) => (
+              {BLOG_POSTS.filter(post => !post.hidden).slice(0, 15).map((post, index) => (
                 <article
                   key={post.slug}
                   className={`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 ${

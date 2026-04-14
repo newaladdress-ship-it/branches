@@ -7,6 +7,7 @@ import Footer from '@/components/footer'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CATEGORIES } from '@/lib/data'
+import { LIVE_STATUSES } from '@/lib/category-mappings'
 
 interface Business {
   id: string
@@ -57,7 +58,10 @@ async function getSimilarBusinesses(city: string, category: string, excludeSlug:
     const snap = await getDocs(q)
     return snap.docs
       .map(d => ({ id: d.id, ...d.data() } as Business))
-      .filter(b => b.slug !== excludeSlug)
+      .filter(b => {
+        const status = String((b as any).status ?? '').toLowerCase()
+        return (!status || LIVE_STATUSES.has(status)) && b.slug !== excludeSlug
+      })
       .slice(0, 4)
   } catch {
     return []

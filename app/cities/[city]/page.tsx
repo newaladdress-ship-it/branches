@@ -9,6 +9,7 @@ import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCityContent } from '@/lib/seo-content'
 import { getCityKeywordCluster } from '@/lib/organic-keywords'
+import { LIVE_STATUSES } from '@/lib/category-mappings'
 
 const BASE_URL = 'https://pakbizbranhces.online'
 
@@ -80,7 +81,12 @@ export default async function CityPage(props: { params: Promise<{ city: string }
       limit(40)
     )
     const snap = await getDocs(q)
-    businesses = snap.docs.map(d => ({ id: d.id, ...d.data() } as Business))
+    businesses = snap.docs
+      .map(d => ({ id: d.id, ...d.data() } as Business))
+      .filter(b => {
+        const status = String((b as any).status ?? '').toLowerCase()
+        return !status || LIVE_STATUSES.has(status)
+      })
   } catch {}
 
   const content = generateCityContent(cityName)

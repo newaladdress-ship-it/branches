@@ -9,6 +9,7 @@ import Footer from '@/components/footer'
 import { CITIES } from '@/lib/data'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore'
+import { LIVE_STATUSES } from '@/lib/category-mappings'
 
 interface Business {
   id: string
@@ -53,10 +54,15 @@ function RealEstatePageContent() {
         }
         
         const querySnapshot = await getDocs(q)
-        const realEstateData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Business[]
+        const realEstateData = querySnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+          .filter(business => {
+            const status = String((business as any).status ?? '').toLowerCase()
+            return !status || LIVE_STATUSES.has(status)
+          }) as Business[]
         
         setBusinesses(realEstateData)
       } catch (error) {
