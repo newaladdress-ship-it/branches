@@ -45,26 +45,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  // Blog post pages
+  // Blog post pages - Limited to 15 posts max (uncomment as needed daily)
   let blogPages: MetadataRoute.Sitemap = []
   try {
     // Try to get blog posts from Firebase first
     const blogSnap = await getDocs(collection(db, 'blogPosts'))
-    blogPages = blogSnap.docs.map(doc => {
-      const blog = doc.data()
-      return {
-        url: `${BASE_URL}/blog/${doc.id}`,
-        lastModified: blog.updatedAt ? new Date(blog.updatedAt.toDate?.() ?? blog.updatedAt) : new Date(blog.date || now),
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-      }
-    })
+    blogPages = blogSnap.docs
+      .slice(0, 15) // Limit to first 15 posts
+      .map(doc => {
+        const blog = doc.data()
+        return {
+          url: `${BASE_URL}/blog/${doc.id}`,
+          lastModified: blog.updatedAt ? new Date(blog.updatedAt.toDate?.() ?? blog.updatedAt) : new Date(blog.date || now),
+          changeFrequency: 'weekly' as const,
+          priority: 0.7,
+        }
+      })
   } catch (error) {
     console.log('Firebase blog posts not available, trying static data')
     try {
-      // Fallback to static blog data
+      // Fallback to static blog data - Limited to 15 posts
       const { BLOG_POSTS } = await import('@/lib/blog-data')
-      blogPages = BLOG_POSTS.map(post => ({
+      
+      // Filter out hidden posts and limit to 15
+      const activePosts = BLOG_POSTS.filter(post => !post.hidden).slice(0, 15)
+      
+      blogPages = activePosts.map(post => ({
         url: `${BASE_URL}/blog/${post.slug}`,
         lastModified: new Date(post.date),
         changeFrequency: 'monthly' as const,
