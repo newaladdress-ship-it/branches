@@ -9,6 +9,10 @@ import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CATEGORIES } from '@/lib/data'
 import { LIVE_STATUSES } from '@/lib/category-mappings'
 
+// Disable caching so new/updated business data appears immediately
+export const revalidate = 0
+export const dynamic = 'force-dynamic'
+
 interface Business {
   id: string
   businessName: string
@@ -80,15 +84,37 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 
   const category = CATEGORIES.find(c => c.id === business.category)
-  const title = `${business.businessName} – ${business.city}`
-  const description = `${business.businessName} is a ${category?.name ?? business.category} business in ${business.city}, Pakistan. Contact: ${business.phone}`
+  const categoryName = category?.name ?? business.category
+  const locationLabel = business.city
+
+  // Global SEO title format: "[Business Name] [Area/City] – Official Details & Contact Information"
+  const title = `${business.businessName} ${locationLabel} – Official Details & Contact Information`
+
+  // Meta description: includes business name, category, address, and target keywords
+  const description = `${business.businessName} is a verified ${categoryName} business located at ${business.address}, ${business.city}, Pakistan. Get official details, contact number (${business.phone}), address, reviews, and more.`
+
   const url = `https://pakbizbranhces.online/${params.slug}`
 
   return {
     title,
     description,
-    keywords: `${business.businessName}, ${business.city}, ${category?.name ?? business.category}, ${business.businessName} ${business.city}, ${business.city} Pakistan, business directory Pakistan`,
+    keywords: [
+      business.businessName,
+      `${business.businessName} ${business.city}`,
+      `${business.businessName} contact`,
+      `${business.businessName} address`,
+      `${business.businessName} details`,
+      categoryName,
+      `${categoryName} in ${business.city}`,
+      `${business.city} business directory`,
+      'Pakistan business directory',
+    ].join(', '),
     alternates: { canonical: url },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
     openGraph: {
       title,
       description,
@@ -124,7 +150,12 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
   const categoryUrl = `/categories/${business.category}`
   const cityUrl = `/cities/${encodeURIComponent(business.city.toLowerCase().replace(/ /g, '-'))}`
 
-  const localBusinessSchema = {
+  const sameAs: string[] = []
+  if (business.websiteUrl) sameAs.push(business.websiteUrl)
+  if (business.facebookPage) sameAs.push(business.facebookPage)
+  if (business.youtubeChannel) sameAs.push(business.youtubeChannel)
+
+  const localBusinessSchema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': pageUrl,
@@ -132,20 +163,22 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
     description: business.description,
     url: pageUrl,
     telephone: business.phone,
+    priceRange: '$$',
     ...(business.email && { email: business.email }),
     address: {
       '@type': 'PostalAddress',
       streetAddress: business.address,
       addressLocality: business.city,
+      addressRegion: business.city,
       addressCountry: 'PK',
     },
-    ...(category && {
-      '@type': ['LocalBusiness', 'Organization'],
-    }),
-    ...(business.logoUrl && {
-      image: business.logoUrl,
-    }),
-    ...(business.websiteUrl && { sameAs: [business.websiteUrl] }),
+    areaServed: {
+      '@type': 'City',
+      name: business.city,
+    },
+    ...(category && { knowsAbout: category.name }),
+    ...(business.logoUrl && { image: business.logoUrl, logo: business.logoUrl }),
+    ...(sameAs.length > 0 && { sameAs }),
   }
 
   const breadcrumbSchema = {
@@ -208,8 +241,11 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
               {/* Business Info */}
               <div className="flex-1 min-w-0">
                 <h1 className="text-3xl md:text-4xl font-bold text-[#0f2b3d] mb-2">
-                  {business.businessName}
+                  {business.businessName} {business.city}
                 </h1>
+                <p className="text-sm text-gray-500 mb-3">
+                  Official Details &amp; Contact Information
+                </p>
                 <div className="flex flex-wrap items-center gap-3 text-gray-500 mb-4">
                   {category && (
                     <Link

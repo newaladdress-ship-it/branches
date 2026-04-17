@@ -11,6 +11,9 @@ import { generateCityContent } from '@/lib/seo-content'
 import { getCityKeywordCluster } from '@/lib/organic-keywords'
 import { LIVE_STATUSES } from '@/lib/category-mappings'
 
+// Always fetch fresh data so new businesses show up instantly
+export const revalidate = 0
+
 const BASE_URL = 'https://pakbizbranhces.online'
 
 interface Business {

@@ -165,6 +165,19 @@ export default function AdminPage() {
     }
   }
 
+  async function handleSetActive(businessId: string) {
+    try {
+      const businessRef = doc(db, 'businesses', businessId)
+      await updateDoc(businessRef, { status: 'approved' })
+      setBusinesses(prev => prev.map(b =>
+        b.id === businessId ? { ...b, status: 'approved' } : b
+      ))
+    } catch (error) {
+      console.error('Error activating business:', error)
+      alert('Failed to activate business')
+    }
+  }
+
   async function handleToggleFeatured(businessId: string, currentStatus: boolean) {
     try {
       const businessRef = doc(db, 'businesses', businessId)
@@ -367,13 +380,24 @@ export default function AdminPage() {
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">{business.city}</td>
                           <td className="px-6 py-4">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              business.status === 'approved' 
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {business.status}
-                            </span>
+                            {business.status === 'approved' ? (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                              </span>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                  {business.status || 'unknown'}
+                                </span>
+                                <button
+                                  onClick={() => handleSetActive(business.id)}
+                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                  title="Make this business active"
+                                >
+                                  Set Active
+                                </button>
+                              </div>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             <button

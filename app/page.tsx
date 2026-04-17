@@ -11,6 +11,10 @@ import CitiesGrid from '@/components/home/cities-grid'
 import CTASection from '@/components/home/cta-section'
 import { fetchLatestBusinesses, fetchFeaturedBusinesses } from '@/lib/firebase-server'
 
+// Always fetch fresh data so newly-added businesses appear immediately
+export const revalidate = 0
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Pakistan Business Directory | Find Local Businesses',
   description:

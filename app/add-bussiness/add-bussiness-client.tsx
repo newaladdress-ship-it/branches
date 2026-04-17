@@ -268,16 +268,25 @@ export default function AddBussinessClient() {
       // Add to Firestore
       const docRef = await addDoc(collection(db, 'businesses'), businessData)
 
-      // Send notification email
-      await sendBusinessSubmissionEmail({
-        to: formData.email,
-        businessName: formData.businessName,
-        businessId: docRef.id,
-        email: formData.email,
-        phone: formData.phone,
-        category: formData.category,
-        city: formData.city,
-      })
+      // Send notification email (fire-and-forget, don't block UX on email failures)
+      const categoryLabel =
+        CATEGORIES.find(c => c.id === normalizeCategoryForStorage(formData.category))?.name
+        || formData.category
+
+      if (formData.email) {
+        sendBusinessSubmissionEmail({
+          to: formData.email,
+          businessName: formData.businessName.trim(),
+          businessId: docRef.id,
+          email: formData.email,
+          phone: formData.phone.trim(),
+          category: categoryLabel,
+          city: formData.city.trim(),
+          address: formData.address.trim(),
+          description: formData.description.trim(),
+          slug: businessData.slug,
+        }).catch(err => console.error('[v0] Email dispatch failed:', err))
+      }
 
       setStatus('success')
       

@@ -11,6 +11,9 @@ import { generateCategoryContent } from '@/lib/seo-content'
 import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
 import { getCategoryKeywordCluster } from '@/lib/organic-keywords'
 
+// Always fetch fresh data so new businesses appear immediately
+export const revalidate = 0
+
 const BASE_URL = 'https://pakbizbranhces.online'
 
 interface Business {
