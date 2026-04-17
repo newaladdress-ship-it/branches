@@ -13,9 +13,10 @@ import BannerAd from '@/components/ads/banner-ad'
 import NativeAd from '@/components/ads/native-ad'
 import { fetchLatestBusinesses, fetchFeaturedBusinesses } from '@/lib/firebase-server'
 
-// Always fetch fresh data so newly-added businesses appear immediately
-export const revalidate = 0
-export const dynamic = 'force-dynamic'
+// ISR: page is statically rendered and revalidated every 60 seconds.
+// New businesses appear within 1 minute, while the HTML is served from
+// the edge cache for instant mobile paint (huge LCP / TBT win).
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Pakistan Business Directory | Find Local Businesses',

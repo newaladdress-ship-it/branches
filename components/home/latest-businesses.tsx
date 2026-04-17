@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import React from 'react'
 import { Building2, MapPin, Phone, MessageCircle, ArrowRight } from 'lucide-react'
 import { CATEGORIES } from '@/lib/data'
 import * as Icons from '@/components/ui/icons'
@@ -83,18 +82,14 @@ export default function LatestBusinesses({ businesses }: LatestBusinessesProps) 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {businesses.map((business, index) => {
+          {businesses.map((business) => {
             const category = CATEGORIES.find(c => c.id === business.category)
             const IconComponent = category ? categoryIcons[category.id] : Building2
             const whatsappUrl = business.whatsapp ? `https://wa.me/${business.whatsapp.replace(/[^0-9]/g, '')}` : null
-            // Inject a native ad after every 6 business cards (per spec).
-            // The ad spans the full row width via col-span-full.
-            const shouldInjectAd =
-              (index + 1) % 6 === 0 && index !== businesses.length - 1
 
             return (
-              <React.Fragment key={business.id}>
               <div
+                key={business.id}
                 className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-xl hover:border-blue-300 transition-all duration-300 hover:-translate-y-2 flex flex-col h-full"
               >
                 {/* Header with Logo */}
@@ -179,17 +174,12 @@ export default function LatestBusinesses({ businesses }: LatestBusinessesProps) 
                   </Link>
                 </div>
               </div>
-
-              {/* Native ad injected after every 6th card */}
-              {shouldInjectAd && (
-                <div className="col-span-1 sm:col-span-2 lg:col-span-4">
-                  <NativeAd />
-                </div>
-              )}
-              </React.Fragment>
             )
           })}
         </div>
+
+        {/* Native ad rendered AFTER all 8 latest businesses */}
+        <NativeAd />
 
         <div className="text-center mt-12">
           <Link
