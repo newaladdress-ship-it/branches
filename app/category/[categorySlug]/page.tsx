@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import React from 'react'
 import { Building2, Phone, ArrowRight, ChevronRight, MapPin } from 'lucide-react'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
@@ -10,6 +11,8 @@ import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCategoryContent } from '@/lib/seo-content'
 import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
 import { getCategoryKeywordCluster } from '@/lib/organic-keywords'
+import NativeAd from '@/components/ads/native-ad'
+import BannerAd from '@/components/ads/banner-ad'
 
 // Always fetch fresh data so new businesses appear immediately
 export const revalidate = 0
@@ -206,6 +209,9 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
         </section>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Top inline banner — placed AFTER H1 per spec */}
+          <BannerAd variant="inline" className="mt-0 mb-10" />
+
           {/* Filter by City */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-[#0f2b3d] mb-6">{category.name} by City</h2>
@@ -241,36 +247,49 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {businesses.map(biz => (
-                  <Link
-                    key={biz.id}
-                    href={`/${biz.slug}`}
-                    className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#60a5fa]/30 transition-all group flex flex-col"
-                  >
-                    <div className="flex items-start gap-3 mb-3">
-                      {biz.logoUrl ? (
-                        <img src={biz.logoUrl} alt={biz.businessName} className="w-14 h-14 rounded-lg object-cover border border-gray-100 shrink-0" loading="lazy" />
-                      ) : (
-                        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#0f2b3d] to-[#1a3f57] flex items-center justify-center shrink-0">
-                          <Building2 className="w-7 h-7 text-white/60" />
+                {businesses.map((biz, index) => {
+                  // Inject native ad after every 6 listings (per spec).
+                  const shouldInjectAd =
+                    (index + 1) % 6 === 0 && index !== businesses.length - 1
+                  return (
+                    <React.Fragment key={biz.id}>
+                      <Link
+                        href={`/${biz.slug}`}
+                        className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#60a5fa]/30 transition-all group flex flex-col"
+                      >
+                        <div className="flex items-start gap-3 mb-3">
+                          {biz.logoUrl ? (
+                            <img src={biz.logoUrl} alt={biz.businessName} className="w-14 h-14 rounded-lg object-cover border border-gray-100 shrink-0" loading="lazy" />
+                          ) : (
+                            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#0f2b3d] to-[#1a3f57] flex items-center justify-center shrink-0">
+                              <Building2 className="w-7 h-7 text-white/60" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-gray-900 group-hover:text-[#60a5fa] transition-colors leading-tight mb-1 truncate">
+                              {biz.businessName}
+                            </h3>
+                            <span className="text-xs flex items-center gap-1 text-gray-500">
+                              <MapPin className="w-3 h-3" /> {biz.city}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed flex-1">{biz.description}</p>
+                        <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                          <Phone className="w-3.5 h-3.5" />
+                          {biz.phone}
+                        </div>
+                      </Link>
+
+                      {/* Native ad injected every 6 listings */}
+                      {shouldInjectAd && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                          <NativeAd />
                         </div>
                       )}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-gray-900 group-hover:text-[#60a5fa] transition-colors leading-tight mb-1 truncate">
-                          {biz.businessName}
-                        </h3>
-                        <span className="text-xs flex items-center gap-1 text-gray-500">
-                          <MapPin className="w-3 h-3" /> {biz.city}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed flex-1">{biz.description}</p>
-                    <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
-                      <Phone className="w-3.5 h-3.5" />
-                      {biz.phone}
-                    </div>
-                  </Link>
-                ))}
+                    </React.Fragment>
+                  )
+                })}
               </div>
             )}
 
@@ -315,6 +334,8 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
           </section>
         </div>
       </main>
+      {/* Sticky bottom banner — mobile only, does not cover primary buttons */}
+      <BannerAd variant="sticky-mobile" />
       <Footer />
     </>
   )
