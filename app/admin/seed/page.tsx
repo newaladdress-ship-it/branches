@@ -79,7 +79,7 @@ export default function AdminSeedPage() {
             phone: biz.phone,
             whatsapp: biz.phone,
             email: "",
-            websiteUrl: "",
+            websiteUrl: biz.website ?? "",
             facebookPage: "",
             youtubeChannel: "",
             logoUrl: "",
