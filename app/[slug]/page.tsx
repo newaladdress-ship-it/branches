@@ -72,6 +72,88 @@ async function getSimilarBusinesses(city: string, category: string, excludeSlug:
   }
 }
 
+/**
+ * Extracts area/branch/location from business data.
+ * Priority: subCategory (often contains branch info) > first part of address
+ * Avoids duplicating the city name.
+ */
+function extractAreaOrBranch(business: Business): string {
+  // Check if subCategory contains branch/area info (e.g., "Gulberg Branch", "Clifton")
+  if (business.subCategory) {
+    const subCat = business.subCategory.trim()
+    // Avoid if it's just the city name
+    if (subCat.toLowerCase() !== business.city.toLowerCase()) {
+      return subCat
+    }
+  }
+
+  // Try to extract area from address (first meaningful part before comma)
+  if (business.address) {
+    const parts = business.address.split(',').map(p => p.trim()).filter(Boolean)
+    if (parts.length > 0) {
+      const firstPart = parts[0]
+      // Avoid if it's just the city name or a number/street number
+      if (
+        firstPart.toLowerCase() !== business.city.toLowerCase() &&
+        !/^\d+$/.test(firstPart) &&
+        firstPart.length > 2
+      ) {
+        return firstPart
+      }
+    }
+  }
+
+  return ''
+}
+
+/**
+ * Generates clean SEO title without duplicate words.
+ * Format: [Business Name] [Area/Branch] [City] – Official Details & Contact Information
+ */
+function generateSeoTitle(business: Business, area: string): string {
+  const parts: string[] = [business.businessName]
+  
+  // Add area if available and not already in business name
+  if (area && !business.businessName.toLowerCase().includes(area.toLowerCase())) {
+    parts.push(area)
+  }
+  
+  // Add city if not already in business name or area
+  if (
+    !business.businessName.toLowerCase().includes(business.city.toLowerCase()) &&
+    area.toLowerCase() !== business.city.toLowerCase()
+  ) {
+    parts.push(business.city)
+  }
+  
+  // Clean up: remove extra spaces and join
+  const titleBase = parts.join(' ').replace(/\s+/g, ' ').trim()
+  return `${titleBase} – Official Details & Contact Information`
+}
+
+/**
+ * Generates clean H1 heading without duplicate words.
+ * Format: [Business Name] [Area/Branch] [City]
+ */
+function generateH1Heading(business: Business, area: string): string {
+  const parts: string[] = [business.businessName]
+  
+  // Add area if available and not already in business name
+  if (area && !business.businessName.toLowerCase().includes(area.toLowerCase())) {
+    parts.push(area)
+  }
+  
+  // Add city if not already in business name or area
+  if (
+    !business.businessName.toLowerCase().includes(business.city.toLowerCase()) &&
+    area.toLowerCase() !== business.city.toLowerCase()
+  ) {
+    parts.push(business.city)
+  }
+  
+  return parts.join(' ').replace(/\s+/g, ' ').trim()
+}
+
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const params = await props.params;
   const business = await getBusinessBySlug(params.slug)
@@ -85,13 +167,15 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 
   const category = CATEGORIES.find(c => c.id === business.category)
   const categoryName = category?.name ?? business.category
-  const locationLabel = business.city
+  
+  // Extract area/branch dynamically
+  const area = extractAreaOrBranch(business)
 
-  // Global SEO title format: "[Business Name] [Area/City] – Official Details & Contact Information"
-  const title = `${business.businessName} ${locationLabel} – Official Details & Contact Information`
+  // Global SEO title format: "[Business Name] [Area/Branch] [City] – Official Details & Contact Information"
+  const title = generateSeoTitle(business, area)
 
-  // Meta description: includes business name, category, address, and target keywords
-  const description = `${business.businessName} is a verified ${categoryName} business located at ${business.address}, ${business.city}, Pakistan. Get official details, contact number (${business.phone}), address, reviews, and more.`
+  // Enhanced meta description with category, full address, and SEO keywords
+  const description = `${business.businessName}${area ? ` ${area}` : ''} ${business.city} – Find official contact details, address, phone number (${business.phone}), and information. ${categoryName} located at ${business.address}, ${business.city}, Pakistan. Verified business listing with official information.`
 
   const url = `https://pakbizbranhces.online/${params.slug}`
 
@@ -101,13 +185,17 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     keywords: [
       business.businessName,
       `${business.businessName} ${business.city}`,
+      `${business.businessName}${area ? ` ${area}` : ''} ${business.city}`,
       `${business.businessName} contact`,
       `${business.businessName} address`,
-      `${business.businessName} details`,
+      `${business.businessName} official details`,
+      `${business.businessName} contact information`,
       categoryName,
       `${categoryName} in ${business.city}`,
+      `${categoryName} ${area || business.city}`,
       `${business.city} business directory`,
       'Pakistan business directory',
+      'official contact details',
     ].join(', '),
     alternates: { canonical: url },
     robots: {
@@ -139,6 +227,11 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
   }
 
   const category = CATEGORIES.find(c => c.id === business.category)
+  
+  // Extract area/branch dynamically for H1 heading
+  const area = extractAreaOrBranch(business)
+  const h1Heading = generateH1Heading(business, area)
+  
   const whatsappUrl = business.whatsapp
     ? `https://wa.me/${business.whatsapp.replace(/[^0-9]/g, '')}`
     : null
@@ -241,7 +334,7 @@ export default async function BusinessPage(props: { params: Promise<{ slug: stri
               {/* Business Info */}
               <div className="flex-1 min-w-0">
                 <h1 className="text-3xl md:text-4xl font-bold text-[#0f2b3d] mb-2">
-                  {business.businessName} {business.city}
+                  {h1Heading}
                 </h1>
                 <p className="text-sm text-gray-500 mb-3">
                   Official Details &amp; Contact Information
