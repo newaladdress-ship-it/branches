@@ -7,9 +7,9 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, limit } from 'firebase/firestore'
-import { CITIES, CATEGORIES } from '@/lib/data'
+import { CATEGORIES } from '@/lib/data'
 import { generateCategoryContent } from '@/lib/seo-content'
-import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
+import { getPossibleCategoryValues, LIVE_STATUSES, filterBusinessesByCategory, normalizeCategory } from '@/lib/category-mappings'
 import { getCategoryKeywordCluster } from '@/lib/organic-keywords'
 import NativeAd from '@/components/ads/native-ad'
 import BannerAd from '@/components/ads/banner-ad'
@@ -28,6 +28,41 @@ interface Business {
   description: string
   phone: string
   logoUrl?: string
+}
+
+interface CityCount {
+  name: string
+  slug: string
+  count: number
+}
+
+/**
+ * Converts a city name to URL slug
+ */
+function cityNameToSlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '-')
+}
+
+/**
+ * Extracts unique cities with business counts from a list of businesses
+ */
+function extractCitiesWithCounts(businesses: Business[]): CityCount[] {
+  const cityMap = new Map<string, number>()
+  
+  businesses.forEach(biz => {
+    if (biz.city) {
+      const cityName = biz.city.trim()
+      cityMap.set(cityName, (cityMap.get(cityName) || 0) + 1)
+    }
+  })
+  
+  return Array.from(cityMap.entries())
+    .map(([name, count]) => ({
+      name,
+      slug: cityNameToSlug(name),
+      count
+    }))
+    .sort((a, b) => b.count - a.count) // Sort by count descending
 }
 
 export async function generateStaticParams() {
@@ -73,54 +108,108 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
 
   let businesses: Business[] = []
   try {
-    // Simplified approach: query by categoryId first, then use mapping for backwards compatibility
-    const categoryValues = getPossibleCategoryValues(params.categorySlug).slice(0, 5)
+    // Get all possible category values for flexible matching
+    const categoryValues = getPossibleCategoryValues(params.categorySlug)
+    // Firestore 'in' query supports max 30 values - take first 10 most common
+    const queryValues = categoryValues.slice(0, 10)
     
-    // Primary query using standardized categoryId field
-    const primaryQuery = query(
+    // Query 1: by categoryId (new standardized field)
+    const categoryIdQuery = query(
       collection(db, 'businesses'), 
       where('categoryId', '==', params.categorySlug), 
-      limit(60)
+      limit(100)
     )
     
-    // Fallback query using category field for backwards compatibility
-    const fallbackQuery = query(
+    // Query 2: by categorySlug (alternate standardized field)
+    const categorySlugQuery = query(
       collection(db, 'businesses'), 
-      where('category', 'in', categoryValues), 
-      limit(60)
+      where('categorySlug', '==', params.categorySlug), 
+      limit(100)
     )
     
-    const [primarySnapshot, fallbackSnapshot] = await Promise.all([
-      getDocs(primaryQuery),
-      getDocs(fallbackQuery)
+    // Query 3: by category field with multiple possible values (legacy support)
+    const categoryQuery = query(
+      collection(db, 'businesses'), 
+      where('category', 'in', queryValues), 
+      limit(100)
+    )
+    
+    // Execute all queries in parallel
+    const [idSnapshot, slugSnapshot, categorySnapshot] = await Promise.all([
+      getDocs(categoryIdQuery),
+      getDocs(categorySlugQuery),
+      getDocs(categoryQuery)
     ])
     
+    // Merge results, removing duplicates
     const merged = new Map<string, Business>()
     
-    // Add primary results first
-    primarySnapshot.docs.forEach((doc) => {
-      const business = { id: doc.id, ...doc.data() } as Business
-      const status = String((business as any).status ?? '').toLowerCase()
-      if (!status || LIVE_STATUSES.has(status)) {
+    const processDoc = (doc: any) => {
+      if (merged.has(doc.id)) return
+      
+      const data = doc.data()
+      const business = { id: doc.id, ...data } as Business & { status?: string }
+      const status = String(business.status ?? '').toLowerCase()
+      
+      // Check if status is valid (approved, pending, live, active, or empty/undefined)
+      if (LIVE_STATUSES.has(status)) {
         merged.set(doc.id, business)
       }
-    })
+    }
     
-    // Add fallback results that aren't already in the map
-    fallbackSnapshot.docs.forEach((doc) => {
-      if (!merged.has(doc.id)) {
-        const business = { id: doc.id, ...doc.data() } as Business
-        const status = String((business as any).status ?? '').toLowerCase()
-        if (!status || LIVE_STATUSES.has(status)) {
+    idSnapshot.docs.forEach(processDoc)
+    slugSnapshot.docs.forEach(processDoc)
+    categorySnapshot.docs.forEach(processDoc)
+    
+    // Client-side filtering as final fallback to catch any edge cases
+    // This handles businesses where the category field has unexpected variations
+    let allBusinesses = Array.from(merged.values())
+    
+    // If we got very few results, fetch more and filter client-side
+    if (allBusinesses.length < 5) {
+      const broadQuery = query(
+        collection(db, 'businesses'),
+        limit(200)
+      )
+      const broadSnapshot = await getDocs(broadQuery)
+      
+      broadSnapshot.docs.forEach((doc) => {
+        if (merged.has(doc.id)) return
+        
+        const data = doc.data()
+        const business = { id: doc.id, ...data } as Business & { status?: string; categoryId?: string; categorySlug?: string }
+        const status = String(business.status ?? '').toLowerCase()
+        
+        if (!LIVE_STATUSES.has(status)) return
+        
+        // Check if this business matches the category using flexible matching
+        const categoryFields = [business.category, business.categoryId, business.categorySlug].filter(Boolean) as string[]
+        const matches = categoryFields.some(field => {
+          const normalized = normalizeCategory(field)
+          const targetNormalized = normalizeCategory(params.categorySlug)
+          return normalized === targetNormalized || 
+                 normalized.includes(targetNormalized) || 
+                 targetNormalized.includes(normalized)
+        })
+        
+        if (matches) {
           merged.set(doc.id, business)
         }
-      }
-    })
+      })
+      
+      allBusinesses = Array.from(merged.values())
+    }
     
-    businesses = Array.from(merged.values()).slice(0, 40)
+    businesses = allBusinesses
   } catch (error) {
     console.error('Error fetching businesses by category:', error)
   }
+
+  // Extract cities with counts from actual business data
+  const citiesWithCounts = extractCitiesWithCounts(businesses)
+  
+  // Limit displayed businesses to 40 for the listing section
+  const displayedBusinesses = businesses.slice(0, 40)
 
   const content = generateCategoryContent(params.categorySlug)
   const pageUrl = `${BASE_URL}/categories/${params.categorySlug}`
@@ -202,8 +291,8 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
               Browse verified {category.name.toLowerCase()} businesses across 150+ cities in Pakistan.
             </p>
             <div className="mt-6 flex items-center gap-3 text-white/70 text-sm">
-              <span className="bg-white/10 px-3 py-1 rounded-full">{businesses.length}+ Listings</span>
-              <span className="bg-white/10 px-3 py-1 rounded-full">150+ Cities</span>
+              <span className="bg-white/10 px-3 py-1 rounded-full">{businesses.length} Listings</span>
+              <span className="bg-white/10 px-3 py-1 rounded-full">{citiesWithCounts.length} Cities</span>
             </div>
           </div>
         </section>
@@ -212,31 +301,43 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
           {/* Top inline banner — placed AFTER H1 per spec */}
           <BannerAd variant="inline" className="mt-0 mb-10" />
 
-          {/* Filter by City */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-[#0f2b3d] mb-6">{category.name} by City</h2>
-            <div className="flex flex-wrap gap-3">
-              {CITIES.map(city => (
-                <Link
-                  key={city}
-                  href={`/locations/${city.toLowerCase().replace(/ /g, '-')}/${params.categorySlug}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-white rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-[#60a5fa] hover:text-[#60a5fa] transition-colors shadow-sm"
-                >
-                  <MapPin className="w-3.5 h-3.5" />
-                  {city}
-                </Link>
-              ))}
-            </div>
-          </section>
+          {/* Filter by City - Dynamic from database */}
+          {citiesWithCounts.length > 0 && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold text-[#0f2b3d] mb-6">
+                {category.name} by City
+                <span className="text-base font-normal text-gray-500 ml-3">({citiesWithCounts.length} cities)</span>
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {citiesWithCounts.map(city => (
+                  <Link
+                    key={city.slug}
+                    href={`/category/${params.categorySlug}/${city.slug}`}
+                    className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#60a5fa]/30 transition-all group"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <MapPin className="w-4 h-4 text-[#60a5fa]" />
+                      <span className="font-semibold text-gray-900 group-hover:text-[#60a5fa] transition-colors truncate">
+                        {city.name}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {city.count} {city.count === 1 ? 'business' : 'businesses'}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Business Listings */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-[#0f2b3d] mb-6">
               All {category.name} Businesses
-              <span className="text-base font-normal text-gray-500 ml-3">({businesses.length} listings)</span>
+              <span className="text-base font-normal text-gray-500 ml-3">({displayedBusinesses.length} of {businesses.length} listings)</span>
             </h2>
 
-            {businesses.length === 0 ? (
+            {displayedBusinesses.length === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
                 <Building2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">No Listings Yet</h3>
@@ -247,10 +348,10 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {businesses.map((biz, index) => {
+                {displayedBusinesses.map((biz, index) => {
                   // Inject native ad after every 6 listings (per spec).
                   const shouldInjectAd =
-                    (index + 1) % 6 === 0 && index !== businesses.length - 1
+                    (index + 1) % 6 === 0 && index !== displayedBusinesses.length - 1
                   return (
                     <React.Fragment key={biz.id}>
                       <Link
@@ -293,7 +394,7 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
               </div>
             )}
 
-            {businesses.length > 0 && (
+            {displayedBusinesses.length > 0 && (
               <div className="mt-6 text-center">
                 <Link href="/add-business" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#0f2b3d] to-[#1a3f57] text-white rounded-xl font-semibold hover:opacity-90 transition-opacity">
                   Add Your {category.name} Business — Free <ArrowRight className="w-4 h-4" />

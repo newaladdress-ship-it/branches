@@ -8,7 +8,7 @@ import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCityCategoryContent } from '@/lib/seo-content'
-import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
+import { getPossibleCategoryValues, LIVE_STATUSES, normalizeCategory } from '@/lib/category-mappings'
 import { getCategoryKeywordCluster, getCityKeywordCluster } from '@/lib/organic-keywords'
 
 const BASE_URL = 'https://pakbizbranhces.online'
@@ -76,20 +76,78 @@ export default async function CityCategoryPage(props: { params: Promise<{ city: 
   let businesses: Business[] = []
   try {
     const categoryValues = getPossibleCategoryValues(params.categorySlug).slice(0, 10)
-    const q = query(
+    
+    // Query 1: by categoryId (standardized field) + city
+    const categoryIdQuery = query(
+      collection(db, 'businesses'),
+      where('city', '==', cityName),
+      where('categoryId', '==', params.categorySlug),
+      limit(60)
+    )
+    
+    // Query 2: by category field (legacy) + city
+    const categoryQuery = query(
       collection(db, 'businesses'),
       where('city', '==', cityName),
       where('category', 'in', categoryValues),
       limit(60)
     )
-    const snap = await getDocs(q)
-    businesses = snap.docs
-      .map(d => ({ id: d.id, ...d.data() } as Business))
-      .filter((business) => {
-        const status = String((business as any).status ?? '').toLowerCase()
-        return !status || LIVE_STATUSES.has(status)
+    
+    const [idSnap, categorySnap] = await Promise.all([
+      getDocs(categoryIdQuery),
+      getDocs(categoryQuery)
+    ])
+    
+    // Merge results
+    const merged = new Map<string, Business>()
+    
+    const processDoc = (doc: any) => {
+      if (merged.has(doc.id)) return
+      const data = doc.data()
+      const business = { id: doc.id, ...data } as Business & { status?: string }
+      const status = String(business.status ?? '').toLowerCase()
+      if (LIVE_STATUSES.has(status)) {
+        merged.set(doc.id, business)
+      }
+    }
+    
+    idSnap.docs.forEach(processDoc)
+    categorySnap.docs.forEach(processDoc)
+    
+    // Fallback: if few results, fetch all city businesses and filter client-side
+    if (merged.size < 3) {
+      const cityQuery = query(
+        collection(db, 'businesses'),
+        where('city', '==', cityName),
+        limit(100)
+      )
+      const citySnap = await getDocs(cityQuery)
+      
+      citySnap.docs.forEach((doc) => {
+        if (merged.has(doc.id)) return
+        const data = doc.data()
+        const business = { id: doc.id, ...data } as Business & { status?: string; categoryId?: string; categorySlug?: string }
+        const status = String(business.status ?? '').toLowerCase()
+        
+        if (!LIVE_STATUSES.has(status)) return
+        
+        // Check if category matches
+        const categoryFields = [business.category, business.categoryId, business.categorySlug].filter(Boolean) as string[]
+        const matches = categoryFields.some(field => {
+          const normalized = normalizeCategory(field)
+          const targetNormalized = normalizeCategory(params.categorySlug)
+          return normalized === targetNormalized || 
+                 normalized.includes(targetNormalized) || 
+                 targetNormalized.includes(normalized)
+        })
+        
+        if (matches) {
+          merged.set(doc.id, business)
+        }
       })
-      .slice(0, 40)
+    }
+    
+    businesses = Array.from(merged.values()).slice(0, 40)
   } catch {}
 
   const content = generateCityCategoryContent(cityName, params.categorySlug)

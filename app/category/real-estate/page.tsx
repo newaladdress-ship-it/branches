@@ -9,7 +9,7 @@ import Footer from '@/components/footer'
 import { CITIES } from '@/lib/data'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore'
-import { LIVE_STATUSES } from '@/lib/category-mappings'
+import { LIVE_STATUSES, getPossibleCategoryValues, normalizeCategory } from '@/lib/category-mappings'
 
 interface Business {
   id: string
@@ -31,38 +31,55 @@ function RealEstatePageContent() {
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [loading, setLoading] = useState(false)
 
-  // Fetch real estate businesses from Firebase
+  // Fetch real estate businesses from Firebase with flexible category matching
   useEffect(() => {
     async function fetchRealEstate() {
       setLoading(true)
       try {
-        let q = query(
+        const categoryValues = getPossibleCategoryValues('real-estate').slice(0, 10)
+        
+        // Query 1: by categoryId
+        const categoryIdQuery = query(
           collection(db, 'businesses'),
-          where('category', '==', 'real-estate'),
-          orderBy('businessName'),
-          limit(50)
+          where('categoryId', '==', 'real-estate'),
+          limit(100)
         )
         
-        if (city) {
-          q = query(
-            collection(db, 'businesses'),
-            where('category', '==', 'real-estate'),
-            where('city', '==', city),
-            orderBy('businessName'),
-            limit(50)
-          )
+        // Query 2: by category field with multiple values
+        const categoryQuery = query(
+          collection(db, 'businesses'),
+          where('category', 'in', categoryValues),
+          limit(100)
+        )
+        
+        const [idSnap, categorySnap] = await Promise.all([
+          getDocs(categoryIdQuery),
+          getDocs(categoryQuery)
+        ])
+        
+        // Merge and deduplicate results
+        const merged = new Map<string, Business>()
+        
+        const processDoc = (doc: any) => {
+          if (merged.has(doc.id)) return
+          const data = doc.data()
+          const business = { id: doc.id, ...data } as Business & { status?: string }
+          const status = String(business.status ?? '').toLowerCase()
+          if (LIVE_STATUSES.has(status)) {
+            // Apply city filter if selected
+            if (!city || business.city === city) {
+              merged.set(doc.id, business)
+            }
+          }
         }
         
-        const querySnapshot = await getDocs(q)
-        const realEstateData = querySnapshot.docs
-          .map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }))
-          .filter(business => {
-            const status = String((business as any).status ?? '').toLowerCase()
-            return !status || LIVE_STATUSES.has(status)
-          }) as Business[]
+        idSnap.docs.forEach(processDoc)
+        categorySnap.docs.forEach(processDoc)
+        
+        // Sort by businessName
+        const realEstateData = Array.from(merged.values())
+          .sort((a, b) => a.businessName.localeCompare(b.businessName))
+          .slice(0, 50)
         
         setBusinesses(realEstateData)
       } catch (error) {
