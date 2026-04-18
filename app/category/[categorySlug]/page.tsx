@@ -9,7 +9,7 @@ import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 import { CITIES, CATEGORIES } from '@/lib/data'
 import { generateCategoryContent } from '@/lib/seo-content'
-import { getPossibleCategoryValues, LIVE_STATUSES } from '@/lib/category-mappings'
+import { getPossibleCategoryValues, LIVE_STATUSES, filterBusinessesByCategory, normalizeCategory } from '@/lib/category-mappings'
 import { getCategoryKeywordCluster } from '@/lib/organic-keywords'
 import NativeAd from '@/components/ads/native-ad'
 import BannerAd from '@/components/ads/banner-ad'
@@ -73,51 +73,99 @@ export default async function CategoryPage(props: { params: Promise<{ categorySl
 
   let businesses: Business[] = []
   try {
-    // Simplified approach: query by categoryId first, then use mapping for backwards compatibility
-    const categoryValues = getPossibleCategoryValues(params.categorySlug).slice(0, 5)
+    // Get all possible category values for flexible matching
+    const categoryValues = getPossibleCategoryValues(params.categorySlug)
+    // Firestore 'in' query supports max 30 values - take first 10 most common
+    const queryValues = categoryValues.slice(0, 10)
     
-    // Primary query using standardized categoryId field
-    const primaryQuery = query(
+    // Query 1: by categoryId (new standardized field)
+    const categoryIdQuery = query(
       collection(db, 'businesses'), 
       where('categoryId', '==', params.categorySlug), 
-      limit(60)
+      limit(100)
     )
     
-    // Fallback query using category field for backwards compatibility
-    const fallbackQuery = query(
+    // Query 2: by categorySlug (alternate standardized field)
+    const categorySlugQuery = query(
       collection(db, 'businesses'), 
-      where('category', 'in', categoryValues), 
-      limit(60)
+      where('categorySlug', '==', params.categorySlug), 
+      limit(100)
     )
     
-    const [primarySnapshot, fallbackSnapshot] = await Promise.all([
-      getDocs(primaryQuery),
-      getDocs(fallbackQuery)
+    // Query 3: by category field with multiple possible values (legacy support)
+    const categoryQuery = query(
+      collection(db, 'businesses'), 
+      where('category', 'in', queryValues), 
+      limit(100)
+    )
+    
+    // Execute all queries in parallel
+    const [idSnapshot, slugSnapshot, categorySnapshot] = await Promise.all([
+      getDocs(categoryIdQuery),
+      getDocs(categorySlugQuery),
+      getDocs(categoryQuery)
     ])
     
+    // Merge results, removing duplicates
     const merged = new Map<string, Business>()
     
-    // Add primary results first
-    primarySnapshot.docs.forEach((doc) => {
-      const business = { id: doc.id, ...doc.data() } as Business
-      const status = String((business as any).status ?? '').toLowerCase()
-      if (!status || LIVE_STATUSES.has(status)) {
+    const processDoc = (doc: any) => {
+      if (merged.has(doc.id)) return
+      
+      const data = doc.data()
+      const business = { id: doc.id, ...data } as Business & { status?: string }
+      const status = String(business.status ?? '').toLowerCase()
+      
+      // Check if status is valid (approved, pending, live, active, or empty/undefined)
+      if (LIVE_STATUSES.has(status)) {
         merged.set(doc.id, business)
       }
-    })
+    }
     
-    // Add fallback results that aren't already in the map
-    fallbackSnapshot.docs.forEach((doc) => {
-      if (!merged.has(doc.id)) {
-        const business = { id: doc.id, ...doc.data() } as Business
-        const status = String((business as any).status ?? '').toLowerCase()
-        if (!status || LIVE_STATUSES.has(status)) {
+    idSnapshot.docs.forEach(processDoc)
+    slugSnapshot.docs.forEach(processDoc)
+    categorySnapshot.docs.forEach(processDoc)
+    
+    // Client-side filtering as final fallback to catch any edge cases
+    // This handles businesses where the category field has unexpected variations
+    let allBusinesses = Array.from(merged.values())
+    
+    // If we got very few results, fetch more and filter client-side
+    if (allBusinesses.length < 5) {
+      const broadQuery = query(
+        collection(db, 'businesses'),
+        limit(200)
+      )
+      const broadSnapshot = await getDocs(broadQuery)
+      
+      broadSnapshot.docs.forEach((doc) => {
+        if (merged.has(doc.id)) return
+        
+        const data = doc.data()
+        const business = { id: doc.id, ...data } as Business & { status?: string; categoryId?: string; categorySlug?: string }
+        const status = String(business.status ?? '').toLowerCase()
+        
+        if (!LIVE_STATUSES.has(status)) return
+        
+        // Check if this business matches the category using flexible matching
+        const categoryFields = [business.category, business.categoryId, business.categorySlug].filter(Boolean) as string[]
+        const matches = categoryFields.some(field => {
+          const normalized = normalizeCategory(field)
+          const targetNormalized = normalizeCategory(params.categorySlug)
+          return normalized === targetNormalized || 
+                 normalized.includes(targetNormalized) || 
+                 targetNormalized.includes(normalized)
+        })
+        
+        if (matches) {
           merged.set(doc.id, business)
         }
-      }
-    })
+      })
+      
+      allBusinesses = Array.from(merged.values())
+    }
     
-    businesses = Array.from(merged.values()).slice(0, 40)
+    businesses = allBusinesses.slice(0, 40)
   } catch (error) {
     console.error('Error fetching businesses by category:', error)
   }
