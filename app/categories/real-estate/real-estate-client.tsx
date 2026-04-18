@@ -9,6 +9,7 @@ import Footer from '@/components/footer'
 import CitySearchDropdown from '@/components/ui/city-search-dropdown'
 import { db } from '@/lib/firebase'
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore'
+import { LIVE_STATUSES, getPossibleCategoryValues } from '@/lib/category-mappings'
 
 interface Business {
   id: string
@@ -39,18 +40,48 @@ function RealEstateContent() {
     async function fetchBusinesses() {
       setLoading(true)
       try {
-        const q = query(
+        const categoryValues = getPossibleCategoryValues('real-estate').slice(0, 10)
+        
+        // Query 1: by categoryId
+        const categoryIdQuery = query(
           collection(db, 'businesses'),
-          where('category', '==', 'real-estate'),
-          where('status', '==', 'approved'),
-          orderBy('createdAt', 'desc'),
-          limit(50)
+          where('categoryId', '==', 'real-estate'),
+          limit(100)
         )
-        const querySnapshot = await getDocs(q)
-        const businessesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as Business))
+        
+        // Query 2: by category field with multiple values
+        const categoryQuery = query(
+          collection(db, 'businesses'),
+          where('category', 'in', categoryValues),
+          limit(100)
+        )
+        
+        const [idSnap, categorySnap] = await Promise.all([
+          getDocs(categoryIdQuery),
+          getDocs(categoryQuery)
+        ])
+        
+        // Merge and deduplicate results
+        const merged = new Map<string, Business>()
+        
+        const processDoc = (doc: any) => {
+          if (merged.has(doc.id)) return
+          const data = doc.data()
+          const business = { id: doc.id, ...data } as Business
+          const status = String((business as any).status ?? '').toLowerCase()
+          if (LIVE_STATUSES.has(status)) {
+            merged.set(doc.id, business)
+          }
+        }
+        
+        idSnap.docs.forEach(processDoc)
+        categorySnap.docs.forEach(processDoc)
+        
+        // Sort by createdAt descending
+        const businessesData = Array.from(merged.values())
+          .sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0))
+          .slice(0, 50)
+        
         setBusinesses(businessesData)
       } catch (error) {
         console.error('Error fetching businesses:', error)
