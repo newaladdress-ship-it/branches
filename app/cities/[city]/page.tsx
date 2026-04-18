@@ -160,7 +160,7 @@ export default async function CityPage(props: { params: Promise<{ city: string }
               {CATEGORIES.map(cat => (
                 <Link
                   key={cat.id}
-                  href={`/locations/${params.city}/${cat.id}`}
+                  href={`/category/${cat.id}/${params.city}`}
                   className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100 hover:shadow-md hover:border-[#60a5fa]/30 transition-all group"
                 >
                   <div
